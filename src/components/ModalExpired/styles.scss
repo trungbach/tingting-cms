@@ -1,0 +1,38 @@
+.modal {
+  :global {
+    .ant-modal-close {
+      display: none;
+    }
+    .ant-modal-content {
+      border-radius: 5px;
+      border: 1px solid #3576fd;
+    }
+    .ant-modal-header {
+      border-radius: 5px 5px 0 0;
+    }
+    .ant-modal-body {
+      border-radius: 0 0 5px 5px;
+      padding: 0;
+    }
+  }
+  .notifi {
+    padding-top: 30px;
+    text-align: center;
+    h2 {
+      margin-bottom: 15px;
+    }
+    .notifiContent {
+      width: 70%;
+      margin: 0 auto;
+      margin-bottom: 60px;
+    }
+    .back {
+      cursor: pointer;
+      color: #686968;
+      font-size: 15px;
+      padding: 15px;
+      border-top: 1px solid #3576fd;
+      margin-top: 3px;
+    }
+  }
+}

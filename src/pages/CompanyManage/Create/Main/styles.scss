@@ -1,0 +1,22 @@
+@import "@/base.scss";
+
+.content {
+  overflow-y: auto;
+  .form {
+    width: 50%;
+    margin-bottom: 50px;
+    .labelLogo {
+      border: 2px solid #e1dfdf;
+      border-radius: var(--border-radius);
+      padding: 10px 50px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .imgCompany {
+      img {
+        width: 300px;
+        margin: 20px 0;
+      }
+    }
+  }
+}

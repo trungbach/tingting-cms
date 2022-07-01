@@ -1,0 +1,35 @@
+@import "@/base.scss";
+
+.content {
+  overflow-y: auto;
+  .account {
+    padding: 30px;
+    .accountImg {
+      img {
+        width: 100%;
+      }
+    }
+    .accountInfo {
+      background-color: var(--background-input-extra);
+      border-radius: var(--border-radius);
+      :global {
+        .row {
+          border-bottom: 1px solid #e7e5e5;
+          margin: 0;
+        }
+        .row:last-child {
+          border-bottom: none;
+        }
+        [class^="col-"],
+        [class*=" col-"] {
+          padding: 15px 30px;
+        }
+        .col-4 {
+          border-right: 1px solid #e7e5e5;
+          color: #000000;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,172 @@
+html,
+body,
+#root {
+  height: 100%;
+  display: flex;
+  width: 100%;
+  background: #e5e5e5;
+}
+
+:root {
+  --primary-color: #2969ef;
+  --blue-color: #3576fd;
+  --gray-color: #717171;
+  --white-color: #fff;
+  --black-color: #000;
+  --dark-color: #252525;
+  --border-color: #4a4a52;
+  --active-color: #ffba00;
+  --text-color: #f0f0f0;
+  --text-input-dark: #1e2329;
+  --text-secondary: #bdbdbd;
+  --background-content: #e5e5e5;
+  --background-input: #edefee;
+  --text-light: #fffbfb;
+  --background-input-extra: #f7f7f8;
+  --border-radius: 10px;
+}
+
+body {
+  margin: 0;
+}
+
+* {
+  font-family: "muli";
+  font-size: 13px;
+}
+
+@font-face {
+  font-family: "roboto";
+  src: local("roboto"),
+    url(./assets/fonts/RobotoTTF/Roboto-Medium.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "muli-bold";
+  src: local("muli-bold"),
+    url(./assets/fonts/muli/Mulish-Bold.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "muli-semibold";
+  src: local("muli-semibold"),
+    url(./assets/fonts/muli/Mulish-SemiBold.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "muli";
+  src: local("muli"),
+    url(./assets/fonts/muli/Mulish-Light.ttf) format("truetype");
+}
+
+.ant-menu-title-content {
+  width: 100%;
+}
+.ant-select-focused .ant-select-selection,
+.ant-select-selection:focus,
+.ant-select-selection:active,
+.ant-select-open .ant-select-selection {
+  border-color: transparent !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+.ant-select-selection {
+  border-color: transparent !important;
+  background-color: transparent !important;
+}
+
+.ant-select-dropdown-menu-item-active {
+  background-color: #1597e8 !important;
+  color: white !important;
+}
+
+.ant-select-selection {
+  border: none !important;
+}
+
+.ant-form-item-control-input {
+  min-height: auto !important;
+}
+
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td {
+  padding: 10px 5px 10px 5px !important;
+}
+
+.ant-spin-nested-loading
+  > .ant-spin-container
+  > div
+  > .ant-table-content
+  > .ant-table-body
+  > table
+  > tbody
+  > tr:hover
+  > td {
+  background-color: unset;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #aaaaaf;
+  border-radius: 10rem;
+}
+
+::-webkit-scrollbar-track-piece:start {
+  background: transparent;
+}
+
+::-webkit-scrollbar-track-piece:end {
+  background: transparent;
+}
+
+/*  error ant form item */
+.ant-form-item-has-error .ant-input,
+.ant-form-item-has-error .ant-input-affix-wrapper {
+  background: var(--background-input) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.ant-form-item-has-error .ant-input-affix-wrapper .ant-input {
+  border: none !important;
+}
+
+.ant-form input[type="file"] {
+  display: none !important;
+}
+
+.ant-form .ant-form-item-label > label {
+  color: var(--black-color);
+}
+
+.ant-empty {
+  margin: 30px !important;
+}
+.ant-modal-confirm-body
+  > .anticon
+  + .ant-modal-confirm-title
+  + .ant-modal-confirm-content {
+  margin-left: 0 !important;
+}
+
+.ant-form .ant-form-item-label > label {
+    height: 44px !important;
+    margin-bottom: 0 !important;
+}
+
+.ant-form-horizontal .ant-form-item-control {
+    display: flex;
+    justify-content: center;
+}
+
+/*  ant input number */
+.ant-input-number-affix-wrapper {
+    border-radius: var(--border-radius) !important;
+    width: 200px !important;
+    overflow: hidden !important;
+}
+.ant-input-number-affix-wrapper .ant-input-number {
+    padding: 5px;
+}

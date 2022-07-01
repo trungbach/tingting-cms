@@ -1,0 +1,18 @@
+@import "@/base.scss";
+
+.content {
+  padding-bottom: 30px;
+  .companyImg {
+    margin-top: 24px;
+    margin-bottom: 60px;
+    img {
+      width: 300px;
+    }
+  }
+  .address {
+    margin-bottom: 20px;
+  }
+  .description {
+    margin-bottom: 30px;
+  }
+}

@@ -1,0 +1,12 @@
+.contentPage {
+  width: 100%;
+  flex-grow: 1;
+  position: relative;
+  overflow: hidden;
+  padding: 23px 18px 0;
+  background-color: var(--white-color);
+  border: 2px solid #e1dfdf;
+  border-radius: var(--border-radius);
+  overflow-y: auto;
+  height: calc(100% - 80px);
+}

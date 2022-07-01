@@ -1,0 +1,20 @@
+@import "@/base.scss";
+
+.content {
+  .contract {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 40px;
+    label {
+      margin-bottom: 0;
+    }
+  }
+  .cta {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 50px;
+  }
+  input[type="file"] {
+    display: none;
+  }
+}

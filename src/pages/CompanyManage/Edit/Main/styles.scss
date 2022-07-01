@@ -1,0 +1,15 @@
+@import "@/base.scss";
+
+.content {
+  overflow-y: auto;
+  .form {
+    width: 50%;
+    margin-bottom: 50px;
+    .imgCompany {
+      img {
+        width: 300px;
+        margin: 20px 0;
+      }
+    }
+  }
+}
