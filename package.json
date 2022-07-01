@@ -6,6 +6,7 @@
   "scripts": {
     "start": "umi dev",
     "build": "UMI_ENV=prod umi build",
+    "start_build": "UMI_ENV=prod umi start",
     "test": "umi test",
     "precommit": "lint-staged",
     "lint": "eslint './src/**/*.{js,jsx}'",
