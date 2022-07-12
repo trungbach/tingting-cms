@@ -1,4 +1,4 @@
-const pageSize = 20;
+const PAGE_SIZE = 20;
 const DATE_STATEMENT = 'YYYY-MM-DDHH:mm:ss';
 const DATE_FILTER = 'YYYY-MM-DD';
 const DATE_FILTER_1 = 'YYYY/MM/DD';
@@ -17,7 +17,7 @@ const COMPANY_ID = 'company_id';
 const DEVICE_KEY = 'device_key';
 export {
     DATE_STATEMENT,
-    pageSize,
+    PAGE_SIZE,
     TIME_FORMAT,
     DATE_FILTER,
     DATE_FILTER_1,

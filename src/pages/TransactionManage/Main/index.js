@@ -10,7 +10,7 @@ import Loading from '@/components/Loading';
 import {
     DATE_FILTER,
     DATE_FORMAT,
-    pageSize,
+    PAGE_SIZE,
     ROLE_ADMIN_COMPANY,
     ROLE_ADMIN_SYSTEM,
     ADMIN_KEY,
@@ -427,7 +427,7 @@ function TransactionManage(props) {
                         defaultCurrent={pageIndex}
                         size="small"
                         total={totalRow}
-                        pageSize={pageSize}
+                        PAGE_SIZE={PAGE_SIZE}
                     />
                 </div>
             </div>

@@ -32,6 +32,48 @@ export default {
         },
 
         {
+            path: '/home',
+            component: '../Wrappers',
+            routes: [
+                {
+                    path: '/home/transaction',
+                    component: '../pages/Transaction',
+                    Routes: ['./src/components/AdminAuthentication'],
+                },
+                {
+                    path: '/home/deposit',
+                    component: '../pages/Deposit',
+                    Routes: ['./src/components/AdminAuthentication'],
+                },
+                {
+                    path: '/home/withdraw',
+                    component: '../pages/Withdraw',
+                    Routes: ['./src/components/AdminAuthentication'],
+                },
+                {
+                    path: '/home/account-manage',
+                    component: '../pages/AccountManage',
+                    Routes: ['./src/components/AdminAuthentication'],
+                },
+                {
+                    path: '/home/device-management',
+                    component: '../pages/DeviceManagement',
+                    Routes: ['./src/components/AdminAuthentication'],
+                },
+                {
+                    path: '/home/tranfer-balance',
+                    component: '../pages/TransferBalance',
+                    Routes: ['./src/components/AdminAuthentication'],
+                },
+                {
+                    path: '/home/admin',
+                    component: '../pages/Admin',
+                    Routes: ['./src/components/AdminAuthentication'],
+                },
+            ],
+        },
+
+        {
             path: '/admin',
             component: '../Wrappers',
             routes: [
@@ -133,16 +175,6 @@ export default {
                     component: '../pages/BorrowManage',
                     Routes: ['./src/components/AdminAuthentication'],
                 },
-                {
-                    path: '/admin/statement-manage',
-                    component: '../pages/StatementPage',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-                {
-                    path: '/admin/transaction-statement-manage/:transactionId',
-                    component: '../pages/StatementPage/Detail',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
             ],
         },
     ],
@@ -154,7 +186,7 @@ export default {
                 antd: true,
                 dva: true,
                 dynamicImport: { webpackChunkName: true },
-                title: 'Fasala',
+                title: 'TingTing',
                 dll: false,
                 locale: {
                     enable: true,

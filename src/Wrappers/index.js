@@ -1,23 +1,26 @@
 import React, { useEffect } from 'react';
 import { connect } from 'dva';
 import PageHeader from '@/components/PageHeader';
+import UserInfo from '@/components/UserInfo';
 import { withRouter } from 'umi';
 import styles from './styles.scss';
 import { DEVICE_KEY } from '@/config/constant';
 import { uuidv4 } from '@/util/function';
 import { useLocalStorage } from '@/hooks';
+import { setLocale, getLocale } from 'umi-plugin-react/locale';
 
 function AppWrappers(props) {
-    const [deviceKey, setDeviceKey] = useLocalStorage(DEVICE_KEY);
     useEffect(() => {
-        if (!deviceKey) {
-            setDeviceKey(uuidv4());
-        }
-    }, [deviceKey]);
+        const locale = localStorage.getItem('umi_locale');
+        setLocale(locale);
+    }, []);
+
+    console.log('locale', getLocale());
 
     return (
         <div style={{ display: 'contents' }}>
             <PageHeader />
+            <UserInfo />
             <div className={styles.fullSpace}>{props.children}</div>
         </div>
     );

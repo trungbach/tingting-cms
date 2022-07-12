@@ -1,14 +1,17 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect } from 'react';
 import styles from './styles.scss';
-import { Form, Input } from 'antd';
+import { Form, Input, Checkbox } from 'antd';
 import { connect } from 'dva';
 import { Link, router } from 'umi';
-import ModalExpired from '@/components/ModalExpired';
-import { setLocale, formatMessage } from 'umi-plugin-react/locale';
+import { setLocale, formatMessage, getLocale } from 'umi-plugin-react/locale';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
 function Login({ dispatch, masterDataStore }) {
     let { isFirstLogin, isLogin } = masterDataStore;
-
+    // const locales = getLocale();
+    // console.log('locales', locales);
+    setLocale('en-US');
     useEffect(() => {
         if (isFirstLogin) {
             router.push('/change-first-password');
@@ -22,7 +25,7 @@ function Login({ dispatch, masterDataStore }) {
 
     const onSubmit = values => {
         values.username = values['username'].trim();
-        values.passwordRequest = values['passwordRequest'].trim();
+        values.password = values['password'].trim();
         dispatch({
             type: 'MASTERDATA/login',
             payload: values,
@@ -31,10 +34,7 @@ function Login({ dispatch, masterDataStore }) {
 
     const _handleKeyDown = e => {
         if (e.key === 'Enter') {
-            // Get the next input field
             const nextSibling = document.querySelector(`input[name=password]`);
-
-            // If found, focus the next field
             if (nextSibling !== null) {
                 nextSibling.focus();
             }
@@ -45,29 +45,67 @@ function Login({ dispatch, masterDataStore }) {
         <div className={styles.login}>
             <div className={styles.loginForm}>
                 <div className={styles.form}>
-                    <h1 className={styles.formTitle}>Đăng nhập</h1>
+                    <div className={styles.formTitle}>
+                        <h3>{formatMessage({ id: 'LET_GET_STARTED' })}</h3>
+                        <p>{formatMessage({ id: 'SIGN_IN_TO_CONTINUE_TO_SPECIE' })}</p>
+                    </div>
                     <Form scrollToFirstError layout="vertical" onFinish={onSubmit} form={form}>
                         <Form.Item
                             label=""
-                            rules={[{ required: true, message: 'Bạn chưa nhập tài khoản!' }]}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: formatMessage({ id: 'PLEASER_ENTER_USERNAME' }),
+                                },
+                            ]}
                             name="username"
                         >
-                            <Input placeholder="Nhập tài khoản" onKeyPress={_handleKeyDown} />
+                            <Input
+                                prefix={<UserOutlined className="site-form-item-icon" />}
+                                placeholder={formatMessage({ id: 'USERNAME' })}
+                                onKeyPress={_handleKeyDown}
+                            />
                         </Form.Item>
                         <Form.Item
                             label=""
-                            rules={[{ required: true, message: 'Bạn chưa nhập mật khẩu!' }]}
-                            name="passwordRequest"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: formatMessage({ id: 'PLEASER_ENTER_PASSWORD' }),
+                                },
+                            ]}
+                            name="password"
                         >
-                            <Input.Password placeholder="Mật khẩu" name="password" />
+                            <Input.Password
+                                prefix={<LockOutlined className="site-form-item-icon" />}
+                                placeholder={formatMessage({ id: 'PASSWORD' })}
+                                name="password"
+                            />
                         </Form.Item>
-                        <button htmltype="submit" className={styles.primaryBtn}>
-                            Đăng nhập
+                        <Form.Item>
+                            <Form.Item name="remember" valuePropName="checked" noStyle>
+                                <Checkbox>Remember me</Checkbox>
+                            </Form.Item>
+
+                            <Link
+                                to="/forgot-password"
+                                style={{
+                                    position: 'absolute',
+                                    right: 0,
+                                    display: 'inline-flex',
+                                    alignItems: 'baseline',
+                                }}
+                            >
+                                <LockOutlined className="me-2" />
+                                {formatMessage({ id: 'FORGOT_PASSWORD' })}
+                            </Link>
+                        </Form.Item>
+                        <button htmltype="submit" className={styles.signInBtn}>
+                            {formatMessage({ id: 'SIGN_IN' })}
                         </button>
                     </Form>
                 </div>
             </div>
-            <div className={styles.loginImg}></div>
         </div>
     );
 }

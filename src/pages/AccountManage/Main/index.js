@@ -6,13 +6,20 @@ import ic_restore from '@/assets/image/ic_restore.svg';
 import ic_search from '@/assets/image/ic_search.svg';
 import EmptyComponent from '@/components/EmptyComponent';
 import Loading from '@/components/Loading';
-import { ADMIN_KEY, pageSize, ROLE_ADMIN_SYSTEM } from '@/config/constant';
+import { ADMIN_KEY, PAGE_SIZE, ROLE_ADMIN_SYSTEM } from '@/config/constant';
 import { useSessionStorage } from '@/hooks';
-import { Input, Modal, Pagination, Select, Switch } from 'antd';
+import { Input, Modal, Pagination, Select, Switch, DatePicker } from 'antd';
 import { connect } from 'dva';
 import React, { useCallback, useEffect, useState } from 'react';
 import { router, withRouter } from 'umi';
+import moment from 'moment';
+import { formatMessage } from 'umi-plugin-react/locale';
+import { DATE_FILTER } from '@/config/constant';
+
 import styles from './styles.scss';
+
+const { RangePicker } = DatePicker;
+
 const { confirm } = Modal;
 const { Option } = Select;
 const roleUser = {
@@ -39,6 +46,7 @@ function AccountManage(props) {
     const [admin] = useSessionStorage(ADMIN_KEY);
     const [pageIndex, setPageIndex] = useState(1);
     const [name, setName] = useState();
+    const [rangeTime, setRangeTime] = useState([]);
     const [role, setRole] = useState(
         admin?.role === ROLE_ADMIN_SYSTEM ? roleFilter.ROLE_ADMIN : roleFilter.ROLE_COMPANY,
     );
@@ -112,20 +120,11 @@ function AccountManage(props) {
     }, [pageIndex, name, role, deleted, deleteResponse, activeResponse, companyId]);
 
     const goToCreate = () => {
-        router.push('/admin/create-account');
-    };
-
-    const goToContract = accountCode => {
-        router.push(`/admin/contract-account/${accountCode}`);
+        router.push('/home/create-account');
     };
 
     const goToEdit = accountCode => {
-        // getDetailAccount({ userCode: accountCode });
         router.push(`/admin/edit-account/${accountCode}`);
-    };
-
-    const goToBank = accountCode => {
-        router.push(`/admin/bank-account/${accountCode}`);
     };
 
     const handleActive = (userStatus, userCode) => {
@@ -152,45 +151,38 @@ function AccountManage(props) {
         });
     };
 
-    const handleRestore = accountCode => {
-        confirm({
-            title: 'Bạn có chắc chắn muốn khôi phục tài khoản này?',
-            onOk: () => {
-                restoreAccount({ code: accountCode });
-            },
-            onCancel: () => {},
-        });
-    };
-
-    const handleFilterRole = role => {
-        if (role === roleFilter.ROLE_ADMIN) {
-            hideSelectCompanies(true);
-        } else {
-            hideSelectCompanies(false);
-        }
-        setRole(role);
-        // router.push(`/admin/account-manage?role=${role}`);
-    };
+    const listAccount = [
+        {
+            id: 1,
+            name: 'User1',
+            role: 'Merchant',
+            email: 'merchant@gmail.com',
+            status: 'Normal',
+            createdAt: '22-10-2022',
+        },
+        {
+            id: 2,
+            name: 'User2',
+            role: 'User',
+            email: 'user@gmail.com',
+            status: 'Normal',
+            createdAt: '22-10-2022',
+        },
+    ];
 
     const renderDataUsers = loading ? (
         <Loading />
-    ) : accounts.length === 0 ? (
+    ) : listAccount.length === 0 ? (
         <EmptyComponent />
     ) : (
-        accounts.map((value, index) => (
+        listAccount.map((value, index) => (
             <tr className="row text-center" key={(value, index)}>
                 <td className="col-1">{value.id}</td>
                 <td className="col-2">{value.name}</td>
-                <td className="col-1">{value.phone}</td>
+                <td className="col-2">{value.role}</td>
                 <td className="col-2">{value.email}</td>
-                <td className="col-2">{value.positionInCompany}</td>
-                <td className="col-1">{roleUser[value.role]}</td>
-                <td
-                    className={`col-1 ${styles.pointer}`}
-                    onClick={() => handleActive(value.status, value.code)}
-                >
-                    <Switch size="small" checked={value.status === statusUser.APPROVED} />
-                </td>
+                <td className="col-1">{value.status}</td>
+                <td className="col-2">{value.createdAt}</td>
                 <td className="col-2 d-flex" style={{ justifyContent: 'space-evenly' }}>
                     <img
                         className={styles.sizeIcon}
@@ -199,91 +191,77 @@ function AccountManage(props) {
                         alt="Edit"
                         title="Chỉnh sửa"
                     />
-                    {deleted ? (
-                        <img
-                            className={styles.sizeIcon}
-                            src={ic_restore}
-                            onClick={() => handleRestore(value.code)}
-                            alt="Delete"
-                            title="Khôi phục"
-                        />
-                    ) : (
-                        <img
-                            className={styles.sizeIcon}
-                            src={ic_delete}
-                            onClick={() => handleDelete(value.code)}
-                            alt="Delete"
-                            title="Xóa"
-                        />
-                    )}
-
                     <img
                         className={styles.sizeIcon}
-                        src={ic_contract}
-                        onClick={() => goToContract(value.code)}
-                        alt="See contract"
-                        title="Xem hợp đồng"
-                    />
-
-                    <img
-                        className={styles.sizeIcon}
-                        src={ic_bank}
-                        onClick={() => goToBank(value.code)}
-                        alt="Bank Account"
-                        title="Thông tin ngân hàng"
+                        src={ic_delete}
+                        onClick={() => handleDelete(value.code)}
+                        alt="Delete"
+                        title="Xóa"
                     />
                 </td>
             </tr>
         ))
     );
-
+    function disabledDate(current) {
+        // Can not select days after today and today
+        return current && current > moment().endOf('day');
+    }
     return (
         <div className={styles.content}>
-            <div className={styles.filterByRole}>
-                {admin?.role === ROLE_ADMIN_SYSTEM && (
-                    <span
-                        className={role === roleFilter.ROLE_ADMIN ? styles.activeRole : styles.role}
-                        onClick={() => handleFilterRole(roleFilter.ROLE_ADMIN)}
-                    >
-                        Quản trị hệ thống
-                    </span>
-                )}
-                <span
-                    className={role === roleFilter.ROLE_COMPANY ? styles.activeRole : styles.role}
-                    onClick={() => handleFilterRole(roleFilter.ROLE_COMPANY)}
-                >
-                    Quản trị viên công ty
-                </span>
-                <span
-                    className={role === roleFilter.ROLE_USER ? styles.activeRole : styles.role}
-                    onClick={() => handleFilterRole(roleFilter.ROLE_USER)}
-                >
-                    Nhân viên
-                </span>
+            <div className={styles.header}>
+                <div>
+                    <h3>{formatMessage({ id: 'ACCOUNT_MANAGEMENT' })}</h3>
+                </div>
+                <div className={styles.datePicker}>
+                    <label className="me-2">{formatMessage({ id: 'TIME' })}: </label>
+                    <RangePicker
+                        format={DATE_FILTER}
+                        disabledDate={disabledDate}
+                        onChange={(dates, dateStrings) => setRangeTime(dateStrings)}
+                    />
+                </div>
             </div>
             <div className={styles.pageFilter}>
-                <Input
-                    prefix={<img src={ic_search} alt="ic_search" />}
-                    className={styles.textInput}
-                    placeholder="Tìm kiếm theo tên"
-                    onChange={e => setName(e.target.value)}
-                />
-
                 <div className={styles.select}>
-                    <Select defaultValue={false} onChange={value => setDeleted(value)}>
-                        <Option value={true}>Đã xóa</Option>
-                        <Option value={false}>Chưa xóa</Option>
+                    <div className="mb-1"> {formatMessage({ id: 'ROLE' })}:</div>
+                    <Select
+                        style={{ minWidth: 180 }}
+                        defaultValue=""
+                        onChange={value => setRole(value)}
+                    >
+                        <Option value=""> {formatMessage({ id: 'ROLE' })}</Option>
+                        <Option value="23">Chờ xử lý</Option>
+                        <Option value="234">Đang xử lý</Option>
+                        <Option value="235">Hoàn thành</Option>
+                        <Option value="236">Từ chối</Option>
+                        <Option value="237">Khách hàng hủy giao dịch</Option>
                     </Select>
                 </div>
-                <button className={styles.primaryBtn} onClick={goToCreate}>
-                    Tạo tài khoản
-                </button>
-                {/* {admin?.role === ROLE_ADMIN_SYSTEM &&
-        role === roleFilter.ROLE_USER ? null : (
-          <button className={styles.primaryBtn} onClick={goToCreate}>
-            Tạo tài khoản
-          </button>
-        )} */}
+
+                <div className={styles.select}>
+                    <div className="mb-1">{formatMessage({ id: 'STATUS' })}:</div>
+                    <Select
+                        style={{ minWidth: 180 }}
+                        defaultValue=""
+                        onChange={value => setRole(value)}
+                    >
+                        <Option value="">{formatMessage({ id: 'STATUS' })}</Option>
+                        <Option value="23">Chờ xử lý</Option>
+                        <Option value="234">Đang xử lý</Option>
+                        <Option value="235">Hoàn thành</Option>
+                        <Option value="236">Từ chối</Option>
+                        <Option value="237">Khách hàng hủy giao dịch</Option>
+                    </Select>
+                </div>
+                <div style={{ height: 40 }}>
+                    <div className="mb-1">{formatMessage({ id: 'NAME' })}:</div>
+                    <Input className={styles.textInput} />
+                </div>
+                <div style={{ height: 40, marginLeft: 'auto' }}>
+                    <button className={styles.primaryBtn} onClick={goToCreate}>
+                        {formatMessage({ id: 'ADD_ACCOUNT' })}
+                    </button>
+                </div>
             </div>
 
             <div className={styles.table}>
@@ -291,13 +269,12 @@ function AccountManage(props) {
                     <thead>
                         <tr className="text-center">
                             <th className="col-1">ID</th>
-                            <th className="col-2">Tên</th>
-                            <th className="col-1">Điện thoại</th>
-                            <th className="col-2">Email</th>
-                            <th className="col-2">Chức vụ</th>
-                            <th className="col-1">Vai trò</th>
-                            <th className="col-1">Trạng thái</th>
-                            <th className="col-2">Hành động</th>
+                            <th className="col-2"> {formatMessage({ id: 'USERNAME' })}</th>
+                            <th className="col-2"> {formatMessage({ id: 'ROLE' })}</th>
+                            <th className="col-2">{formatMessage({ id: 'EMAIL' })}</th>
+                            <th className="col-1">{formatMessage({ id: 'STATUS' })}</th>
+                            <th className="col-2">{formatMessage({ id: 'CREATED_AT' })}</th>
+                            <th className="col-2">{formatMessage({ id: 'ACTION' })}</th>
                         </tr>
                     </thead>
                     <tbody>{renderDataUsers}</tbody>
@@ -309,7 +286,7 @@ function AccountManage(props) {
                         defaultCurrent={pageIndex}
                         size="small"
                         total={totalRow}
-                        pageSize={pageSize}
+                        PAGE_SIZE={PAGE_SIZE}
                     />
                 </div>
             </div>

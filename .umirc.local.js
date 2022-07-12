@@ -1,6 +1,5 @@
 export default {
     define: {
-      API_DOMAIN: "http://139.162.31.94:8089/",
+        API_DOMAIN: 'http://103.7.40.142:6066/',
     },
-  };
-  
+};

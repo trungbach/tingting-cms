@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from 'react';
 import { Menu, Layout } from 'antd';
 import { connect } from 'dva';
@@ -7,13 +8,17 @@ import ic_transaction from '@/assets/image/ic_transaction.svg';
 import ic_account from '@/assets/image/ic_account.svg';
 import ic_business from '@/assets/image/ic_business.svg';
 import ic_borrow from '@/assets/image/ic_borrow.png';
-import ic_logo from '@/assets/image/ic_logo.svg';
-import ic_statement from '@/assets/image/ic_statement.png';
+import ic_logo from '@/assets/image/ic_logo.png';
+import ic_setting from '@/assets/image/ic_setting.svg';
+import ic_deposit from '@/assets/image/ic_deposit.svg';
+import ic_withdraw from '@/assets/image/ic_withdraw.svg';
+import ic_card from '@/assets/image/ic_card.svg';
 import styles from './styles.scss';
 import { ROLE_ADMIN_SYSTEM, ROLE_ADMIN_COMPANY, ADMIN_KEY } from '@/config/constant';
 import { useSessionStorage } from '@/hooks';
-import { router } from 'umi';
+import { getLocale, formatMessage } from 'umi-plugin-react/locale';
 const { Sider } = Layout;
+const { SubMenu } = Menu;
 
 function PageHeader(props) {
     const { location, masterDataStore } = props;
@@ -25,58 +30,34 @@ function PageHeader(props) {
 
     const adminMenu = [
         {
-            page: 'overview',
-            icon: <img src={ic_overview} />,
-            url: '/admin/overview',
-            text: 'Tổng quan',
-        },
-        {
             page: 'transaction',
             icon: <img src={ic_transaction} />,
-            url: '/admin/transaction-manage',
-            subUrl: '/admin/detail-transaction',
-            subUrl1: '/admin/update-transaction',
-            text: 'Quản lý giao dịch',
+            url: '/home/transaction',
+            text: formatMessage({ id: 'DASHBOARD' }),
+        },
+        {
+            page: 'deposit',
+            icon: <img src={ic_deposit} />,
+            url: '/home/deposit',
+            text: formatMessage({ id: 'DEPOSIT' }),
+        },
+        {
+            page: 'withdraw',
+            icon: <img src={ic_withdraw} />,
+            url: '/home/withdraw',
+            text: formatMessage({ id: 'WITHDRAW' }),
         },
         {
             page: 'account-manage',
-            icon: <img src={ic_account} />,
-            url: '/admin/account-manage',
-            subUrl: '/admin/create-account',
-            subUrl1: '/admin/detail-account',
-            subUrl2: '/admin/edit-account',
-            subUrl3: '/admin/contract-account',
-            subUrl4: '/admin/bank-account',
-            text: 'Quản lý tài khoản',
-        },
-
-        {
-            page: 'company',
             icon: <img src={ic_business} />,
-            url: (() => {
-                if (admin?.role === ROLE_ADMIN_SYSTEM) {
-                    return '/admin/company-manage';
-                } else {
-                    if (companies.length) {
-                        const company = companies.find(company => company.id === admin.companyId);
-                        return `/admin/detail-company/${company?.code}`;
-                    }
-                }
-            })(),
-            subUrl: '/admin/detail-company',
-            subUrl1: '/admin/update-company',
-            subUrl2: '/admin/create-company',
-            text:
-                admin?.role === ROLE_ADMIN_SYSTEM
-                    ? 'Quản lý doanh nghiệp'
-                    : 'Thông tin doanh nghiệp',
+            url: '/home/account-manage',
+            text: formatMessage({ id: 'ACCOUNT_MANAGEMENT' }),
         },
         {
-            page: 'statement-manage',
-            icon: <img src={ic_statement} />,
-            url: '/admin/statement-manage',
-            subUrl4: '/admin/transaction-statement-manage',
-            text: 'Quản lý sao kê',
+            page: 'admin',
+            icon: <img src={ic_business} />,
+            url: '/home/admin',
+            text: formatMessage({ id: 'ADMIN' }),
         },
     ];
 
@@ -123,7 +104,7 @@ function PageHeader(props) {
     return (
         <div className={styles.menuHeader}>
             <Sider
-                width={300}
+                width={250}
                 collapsedWidth={100}
                 collapsible
                 collapsed={collapsed}
@@ -135,6 +116,32 @@ function PageHeader(props) {
                 </div>
                 <Menu theme="dark" mode="inline">
                     {renderListMenu}
+                    <SubMenu
+                        key="sub4"
+                        title={
+                            <span>
+                                <img src={ic_card} alt="" />
+                                <span style={{ marginLeft: '10px' }}>
+                                    {formatMessage({ id: 'CARD' })}
+                                </span>
+                            </span>
+                        }
+                    >
+                        <Menu.Item key="9" icon={<img src={ic_setting} />}>
+                            <Link to="/home/device-management">
+                                <span className={styles.menuText}>
+                                    {formatMessage({ id: 'DEVICE_MANAGEMENT' })}
+                                </span>
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item key="10" icon={<img src={ic_transaction} />}>
+                            <Link to="/home/tranfer-balance">
+                                <span className={styles.menuText}>
+                                    {formatMessage({ id: 'TRANFER_BALANCE' })}
+                                </span>
+                            </Link>
+                        </Menu.Item>
+                    </SubMenu>
                 </Menu>
             </Sider>
         </div>

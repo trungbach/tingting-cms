@@ -24,8 +24,8 @@ const routes = [
       : require('../Login').default,
     Routes: [require('../../components/AdminAuthentication').default],
     exact: true,
-    _title: 'Fasala',
-    _title_default: 'Fasala',
+    _title: 'TingTing',
+    _title_default: 'TingTing',
   },
   {
     path: '/login',
@@ -37,8 +37,8 @@ const routes = [
       : require('../Login').default,
     Routes: [require('../../components/AdminAuthentication').default],
     exact: true,
-    _title: 'Fasala',
-    _title_default: 'Fasala',
+    _title: 'TingTing',
+    _title_default: 'TingTing',
   },
   {
     path: '/forgot-password',
@@ -58,8 +58,8 @@ const routes = [
       : require('../ForgotPassword').default,
     Routes: [require('../../components/AdminAuthentication').default],
     exact: true,
-    _title: 'Fasala',
-    _title_default: 'Fasala',
+    _title: 'TingTing',
+    _title_default: 'TingTing',
   },
   {
     path: '/change-password',
@@ -71,8 +71,8 @@ const routes = [
       : require('../ChangePassword').default,
     Routes: [require('../../components/AdminAuthentication').default],
     exact: true,
-    _title: 'Fasala',
-    _title_default: 'Fasala',
+    _title: 'TingTing',
+    _title_default: 'TingTing',
   },
   {
     path: '/change-first-password',
@@ -84,8 +84,178 @@ const routes = [
       : require('../Login/ChangePasswordInit').default,
     Routes: [require('../../components/AdminAuthentication').default],
     exact: true,
-    _title: 'Fasala',
-    _title_default: 'Fasala',
+    _title: 'TingTing',
+    _title_default: 'TingTing',
+  },
+  {
+    path: '/home',
+    component: __IS_BROWSER
+      ? _dvaDynamic({
+          component: () =>
+            import(/* webpackChunkName: "Wrappers" */ '../../Wrappers'),
+        })
+      : require('../../Wrappers').default,
+    routes: [
+      {
+        path: '/home/transaction',
+        component: __IS_BROWSER
+          ? _dvaDynamic({
+              app: require('@tmp/dva').getApp(),
+              models: () => [
+                import(/* webpackChunkName: 'p__Transaction__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/Transaction/models/index.js').then(
+                  m => {
+                    return { namespace: 'index', ...m.default };
+                  },
+                ),
+              ],
+              component: () =>
+                import(/* webpackChunkName: "p__Transaction" */ '../Transaction'),
+            })
+          : require('../Transaction').default,
+        Routes: [require('../../components/AdminAuthentication').default],
+        exact: true,
+        _title: 'TingTing',
+        _title_default: 'TingTing',
+      },
+      {
+        path: '/home/deposit',
+        component: __IS_BROWSER
+          ? _dvaDynamic({
+              app: require('@tmp/dva').getApp(),
+              models: () => [
+                import(/* webpackChunkName: 'p__Deposit__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/Deposit/models/index.js').then(
+                  m => {
+                    return { namespace: 'index', ...m.default };
+                  },
+                ),
+              ],
+              component: () =>
+                import(/* webpackChunkName: "p__Deposit" */ '../Deposit'),
+            })
+          : require('../Deposit').default,
+        Routes: [require('../../components/AdminAuthentication').default],
+        exact: true,
+        _title: 'TingTing',
+        _title_default: 'TingTing',
+      },
+      {
+        path: '/home/withdraw',
+        component: __IS_BROWSER
+          ? _dvaDynamic({
+              app: require('@tmp/dva').getApp(),
+              models: () => [
+                import(/* webpackChunkName: 'p__Withdraw__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/Withdraw/models/index.js').then(
+                  m => {
+                    return { namespace: 'index', ...m.default };
+                  },
+                ),
+              ],
+              component: () =>
+                import(/* webpackChunkName: "p__Withdraw" */ '../Withdraw'),
+            })
+          : require('../Withdraw').default,
+        Routes: [require('../../components/AdminAuthentication').default],
+        exact: true,
+        _title: 'TingTing',
+        _title_default: 'TingTing',
+      },
+      {
+        path: '/home/account-manage',
+        component: __IS_BROWSER
+          ? _dvaDynamic({
+              app: require('@tmp/dva').getApp(),
+              models: () => [
+                import(/* webpackChunkName: 'p__AccountManage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/AccountManage/models/index.js').then(
+                  m => {
+                    return { namespace: 'index', ...m.default };
+                  },
+                ),
+              ],
+              component: () =>
+                import(/* webpackChunkName: "p__AccountManage" */ '../AccountManage'),
+            })
+          : require('../AccountManage').default,
+        Routes: [require('../../components/AdminAuthentication').default],
+        exact: true,
+        _title: 'TingTing',
+        _title_default: 'TingTing',
+      },
+      {
+        path: '/home/device-management',
+        component: __IS_BROWSER
+          ? _dvaDynamic({
+              app: require('@tmp/dva').getApp(),
+              models: () => [
+                import(/* webpackChunkName: 'p__DeviceManagement__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/DeviceManagement/models/index.js').then(
+                  m => {
+                    return { namespace: 'index', ...m.default };
+                  },
+                ),
+              ],
+              component: () =>
+                import(/* webpackChunkName: "p__DeviceManagement" */ '../DeviceManagement'),
+            })
+          : require('../DeviceManagement').default,
+        Routes: [require('../../components/AdminAuthentication').default],
+        exact: true,
+        _title: 'TingTing',
+        _title_default: 'TingTing',
+      },
+      {
+        path: '/home/tranfer-balance',
+        component: __IS_BROWSER
+          ? _dvaDynamic({
+              app: require('@tmp/dva').getApp(),
+              models: () => [
+                import(/* webpackChunkName: 'p__TransferBalance__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/TransferBalance/models/index.js').then(
+                  m => {
+                    return { namespace: 'index', ...m.default };
+                  },
+                ),
+              ],
+              component: () =>
+                import(/* webpackChunkName: "p__TransferBalance" */ '../TransferBalance'),
+            })
+          : require('../TransferBalance').default,
+        Routes: [require('../../components/AdminAuthentication').default],
+        exact: true,
+        _title: 'TingTing',
+        _title_default: 'TingTing',
+      },
+      {
+        path: '/home/admin',
+        component: __IS_BROWSER
+          ? _dvaDynamic({
+              app: require('@tmp/dva').getApp(),
+              models: () => [
+                import(/* webpackChunkName: 'p__Admin__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/Admin/models/index.js').then(
+                  m => {
+                    return { namespace: 'index', ...m.default };
+                  },
+                ),
+              ],
+              component: () =>
+                import(/* webpackChunkName: "p__Admin" */ '../Admin'),
+            })
+          : require('../Admin').default,
+        Routes: [require('../../components/AdminAuthentication').default],
+        exact: true,
+        _title: 'TingTing',
+        _title_default: 'TingTing',
+      },
+      {
+        component: () =>
+          React.createElement(
+            require('/Users/macair/TrungBach/TingTingPayCMS/node_modules/umi-build-dev/lib/plugins/404/NotFound.js')
+              .default,
+            { pagesPath: 'src/pages', hasRoutesInConfig: true },
+          ),
+        _title: 'TingTing',
+        _title_default: 'TingTing',
+      },
+    ],
+    _title: 'TingTing',
+    _title_default: 'TingTing',
   },
   {
     path: '/admin',
@@ -114,8 +284,8 @@ const routes = [
           : require('../Overview').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/overview',
@@ -135,8 +305,8 @@ const routes = [
           : require('../Overview').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/my-account',
@@ -148,8 +318,8 @@ const routes = [
           : require('../MyAccount').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/transaction-manage',
@@ -169,8 +339,8 @@ const routes = [
           : require('../TransactionManage').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/detail-transaction/:transactionCode',
@@ -190,8 +360,8 @@ const routes = [
           : require('../TransactionManage/Detail').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/account-manage',
@@ -211,8 +381,8 @@ const routes = [
           : require('../AccountManage').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/create-account',
@@ -232,8 +402,8 @@ const routes = [
           : require('../AccountManage/Create').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/edit-account/:userCode',
@@ -253,8 +423,8 @@ const routes = [
           : require('../AccountManage/Edit').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/detail-account/:userCode',
@@ -274,8 +444,8 @@ const routes = [
           : require('../AccountManage/Detail').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/contract-account/:userCode',
@@ -295,8 +465,8 @@ const routes = [
           : require('../AccountManage/Contract').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/bank-account/:userCode',
@@ -316,8 +486,8 @@ const routes = [
           : require('../AccountManage/Bank').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/company-manage',
@@ -337,8 +507,8 @@ const routes = [
           : require('../CompanyManage').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/create-company',
@@ -358,8 +528,8 @@ const routes = [
           : require('../CompanyManage/Create').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/detail-company/:companyCode',
@@ -379,8 +549,8 @@ const routes = [
           : require('../CompanyManage/Detail').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/update-company/:companyCode',
@@ -400,8 +570,8 @@ const routes = [
           : require('../CompanyManage/Edit').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         path: '/admin/borrow-manage',
@@ -421,50 +591,8 @@ const routes = [
           : require('../BorrowManage').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
-      },
-      {
-        path: '/admin/statement-manage',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__StatementPage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/StatementPage/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__StatementPage" */ '../StatementPage'),
-            })
-          : require('../StatementPage').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
-      },
-      {
-        path: '/admin/transaction-statement-manage/:transactionId',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__StatementPage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/StatementPage/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__StatementPage__Detail" */ '../StatementPage/Detail'),
-            })
-          : require('../StatementPage/Detail').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
       {
         component: () =>
@@ -473,12 +601,12 @@ const routes = [
               .default,
             { pagesPath: 'src/pages', hasRoutesInConfig: true },
           ),
-        _title: 'Fasala',
-        _title_default: 'Fasala',
+        _title: 'TingTing',
+        _title_default: 'TingTing',
       },
     ],
-    _title: 'Fasala',
-    _title_default: 'Fasala',
+    _title: 'TingTing',
+    _title_default: 'TingTing',
   },
   {
     component: () =>
@@ -487,8 +615,8 @@ const routes = [
           .default,
         { pagesPath: 'src/pages', hasRoutesInConfig: true },
       ),
-    _title: 'Fasala',
-    _title_default: 'Fasala',
+    _title: 'TingTing',
+    _title_default: 'TingTing',
   },
 ];
 window.g_routes = routes;

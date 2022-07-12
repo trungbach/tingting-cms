@@ -4,19 +4,19 @@ body,
   height: 100%;
   display: flex;
   width: 100%;
-  background: #e5e5e5;
+  background: #131720;
 }
 
 :root {
-  --primary-color: #2969ef;
+  --primary-color: #5D69E9;
   --blue-color: #3576fd;
   --gray-color: #717171;
   --white-color: #fff;
   --black-color: #000;
   --dark-color: #252525;
-  --border-color: #4a4a52;
+  --border-color: #6C7078;
   --active-color: #ffba00;
-  --text-color: #f0f0f0;
+  --text-color: #DFE0E3;
   --text-input-dark: #1e2329;
   --text-secondary: #bdbdbd;
   --background-content: #e5e5e5;
@@ -24,39 +24,131 @@ body,
   --text-light: #fffbfb;
   --background-input-extra: #f7f7f8;
   --border-radius: 10px;
+  --red-color: #FD3C52;
+  --purple-color:  #1D2330;
+  --background-color: #131720;
 }
 
 body {
   margin: 0;
+  color: #DFE0E3;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    color: #DFE0E3;
+ 
 }
 
 * {
-  font-family: "muli";
-  font-size: 13px;
+  font-family: "Inter";
+  font-size: 14px;
+  font-weight: 300;
+  font-style: normal;
+  color: #DFE0E3;
 }
 
 @font-face {
-  font-family: "roboto";
-  src: local("roboto"),
-    url(./assets/fonts/RobotoTTF/Roboto-Medium.ttf) format("truetype");
+    font-family: 'Inter';
+    src: url('./assets/fonts/Inter/static/Inter-ExtraBold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "muli-bold";
-  src: local("muli-bold"),
-    url(./assets/fonts/muli/Mulish-Bold.ttf) format("truetype");
+    font-family: 'Inter';
+    src: url('./assets/fonts/Inter/static/Inter-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "muli-semibold";
-  src: local("muli-semibold"),
-    url(./assets/fonts/muli/Mulish-SemiBold.ttf) format("truetype");
+    font-family: 'Inter';
+    src: url('./assets/fonts/Inter/static/Inter-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: "muli";
-  src: local("muli"),
-    url(./assets/fonts/muli/Mulish-Light.ttf) format("truetype");
+    font-family: 'Inter';
+    src: url('./assets/fonts/Inter/static/Inter-ExtraLight.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('./assets/fonts/Inter/static/Inter-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('./assets/fonts/Inter/static/Inter-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('./assets/fonts/Inter/static/Inter-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('./assets/fonts/Inter/static/Inter-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('./assets/fonts/Inter/static/Inter-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+input {
+    text-indent: 7px;;
+}
+
+.ant-select-selector {
+    background-color: var(--background-color)  !important;
+    border: 1px solid #6C7078 !important; 
+    height: 40px !important;
+    display: flex;
+    align-items: center;
+}
+
+.ant-select-dropdown {
+    background-color: var(--background-color)  !important;
+}
+
+.ant-select-item {
+    background-color: var(--background-color);
+}
+.ant-select-item:hover {
+    background-color: var(--purple-color);
+} 
+
+.ant-select-item-option-active {
+    background-color: var(--purple-color) !important;
+}
+
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+    background-color: var(--purple-color) !important;
 }
 
 .ant-menu-title-content {
@@ -107,7 +199,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 6px;
 }
 ::-webkit-scrollbar-thumb {
   background-color: #aaaaaf;
@@ -125,8 +217,8 @@ body {
 /*  error ant form item */
 .ant-form-item-has-error .ant-input,
 .ant-form-item-has-error .ant-input-affix-wrapper {
-  background: var(--background-input) !important;
-  border: 1px solid var(--border-color) !important;
+  background: var(--background-color) !important;
+  border: 1px solid var(--text-light) !important;
 }
 
 .ant-form-item-has-error .ant-input-affix-wrapper .ant-input {
@@ -169,4 +261,12 @@ body {
 }
 .ant-input-number-affix-wrapper .ant-input-number {
     padding: 5px;
+}
+
+.ant-message {
+    /* display: inline-flex;
+    align-items: center; */
+}
+.ant-message span {
+    color: var(--dark-color)
 }

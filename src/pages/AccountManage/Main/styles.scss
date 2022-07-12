@@ -1,32 +1,53 @@
 @import "@/base.scss";
 
 .content {
-  .filterByRole {
-    display: flex;
-    align-items: center;
-    margin-bottom: 25px;
-    & > span {
-      font-size: 15px;
-      color: var(--dark-color);
-      padding: 4px 8px;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      margin: 0 4px;
-    }
-    & > span.activeRole {
-      color: var(--white-color);
-      background-color: var(--blue-color);
-    }
-  }
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--purple-color);
+    border-radius: 8px;
+    height: 100%;
+    padding: 20px;
+    position: relative;
 
-  .pageFilter {
-    justify-content: flex-end;
-    .select {
-      margin-right: 10px;
-      margin-left: 10px;
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #383E49;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+
+        h3 {
+            font-size: 19px;
+        }
+
+        p {
+            font-size: 13px;
+        }
+
+        .datePicker {
+            :global {
+                .ant-picker {
+                    background-color: var(--background-color);
+                    border-radius: 6px;
+                    border: 1px solid #6C7078;
+
+                }
+            }
+        }
     }
-    .primaryBtn {
-      margin-left: auto;
+
+    .pageFilter {
+        margin-bottom: 20px;
+        justify-content: flex-end;
+
+        .select {
+            margin-right: 10px;
+            margin-left: 10px;
+        }
+
+        // .primaryBtn {
+        //     margin-left: auto;
+        // }
     }
-  }
 }

@@ -1,48 +1,72 @@
 @import "@/base.scss";
 
 .login {
-  display: flex;
-  width: 100vw;
-  .loginForm {
-    width: 51.6%;
-    background-color: var(--white-color);
+    background-image: url('../../assets/image/img_bg_auth.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
     display: flex;
+    width: 100vw;
+    height: 100vh;
     justify-content: center;
     align-items: center;
-    .form {
-      width: 62.5%;
-      .formTitle {
-        color: var(--blue-color);
-        font-size: 36px;
-        font-weight: bold;
-        margin-bottom: 20px;
-      }
-      :global {
-        .ant-input {
-          border: 1px solid var(--blue-color);
-          padding: 10px;
-          border-radius: var(--border-radius);
-          background-color: var(--background-input);
+
+    .loginForm {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 544px;
+        background-color: #fff;
+        padding: 43px;
+        border-radius: 16px;
+
+        .form {
+            width: 100%;
+
+            .formTitle {
+                margin-bottom: 40px;
+                text-align: center;
+
+                h3 {
+                    color: var(--primary-color);
+                    font-weight: 400;
+                    font-size: 30px;
+                    margin-bottom: 5px;
+                }
+
+                p {
+                    color: #383E49;
+                }
+            }
+
+            :global {
+                .ant-input {
+                    background-color: #fff;
+                }
+
+                .ant-input-password {
+                    background-color: #fff;
+                }
+            }
+
+            .forgotPass {
+                text-align: right;
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            .signInBtn {
+                margin: 0 auto;
+                background-color: var(--red-color);
+                border-radius: 4px;
+                padding: 10px 24px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-transform: uppercase;
+                border: none;
+                color: #fff;
+            }
         }
-        .ant-input-password {
-          background-color: var(--background-input);
-          border: 1px solid var(--blue-color);
-          border-radius: var(--border-radius);
-          .ant-input {
-            border: none;
-            padding: 6px 0;
-          }
-        }
-      }
-      .forgotPass {
-        text-align: right;
-        display: block;
-        margin-bottom: 10px;
-      }
     }
-  }
-  .loginImg {
-    width: 48.4%;
-    background-color: #2b1757;
-  }
+
 }

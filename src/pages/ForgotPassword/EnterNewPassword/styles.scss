@@ -1,34 +1,17 @@
 @import "@/base.scss";
 
 .formTitle {
-  color: var(--blue-color);
-  font-size: 36px;
-  font-weight: bold;
-  margin-bottom: 20px;
+    color: var(--blue-color);
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
 .cta {
-  display: flex;
-  justify-content: flex-end;
-  .backBtn {
-    margin-right: 10px;
-  }
-}
+    display: flex;
+    justify-content: flex-end;
 
-:global {
-  .ant-input {
-    border: 1px solid var(--blue-color);
-    padding: 10px;
-    border-radius: var(--border-radius);
-    background-color: var(--background-input);
-  }
-  .ant-input-password {
-    background-color: var(--background-input);
-    border: 1px solid var(--blue-color);
-    border-radius: var(--border-radius);
-    .ant-input {
-      border: none;
-      padding: 6px 0;
+    .backBtn {
+        margin-right: 10px;
     }
-  }
 }
