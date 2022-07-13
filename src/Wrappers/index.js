@@ -12,7 +12,11 @@ import { setLocale, getLocale } from 'umi-plugin-react/locale';
 function AppWrappers(props) {
     useEffect(() => {
         const locale = localStorage.getItem('umi_locale');
-        setLocale(locale);
+        if (locale) {
+            setLocale(locale);
+        } else {
+            setLocale('en-US');
+        }
     }, []);
 
     console.log('locale', getLocale());
