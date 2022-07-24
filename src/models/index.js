@@ -1,15 +1,12 @@
 import authService from '@/services/auth';
 import masterService from '@/services/masterData';
 import { message } from 'antd';
-import {
-    handleRemoveSession,
-    handleErrorModel,
-    statusLogin,
-    checkPasswordExpired,
-} from '@/util/function';
+import { handleRemoveLocal, handleErrorModel } from '@/util/function';
 import { router } from 'umi';
 import _ from 'lodash';
-import { COMPANY_ID, ROLE_ADMIN_COMPANY } from '@/config/constant';
+import { TOKEN_KEY, ADMIN_KEY } from '@/config/constant';
+import { formatMessage } from 'umi-plugin-react/locale';
+
 export default {
     namespace: 'MASTERDATA',
     state: {
@@ -58,40 +55,16 @@ export default {
         },
 
         loginSuccess(state, action) {
-            const { accessToken, role, companyId } = action.payload.data;
-            const statusAuth = checkPasswordExpired(action.payload.data.passwordExpiredAt);
-            if (statusAuth === statusLogin.LOGIN_SUCCESS) {
-                sessionStorage.setItem('token', accessToken);
-                sessionStorage.setItem('Admin', JSON.stringify(action.payload.data));
-                message.success('Đăng nhập thành công!');
-                if (role === ROLE_ADMIN_COMPANY) {
-                    const oldCompanyId = sessionStorage.getItem(COMPANY_ID);
-                    if (companyId !== Number(oldCompanyId)) {
-                        sessionStorage.setItem(COMPANY_ID, companyId);
-                    }
-                    return {
-                        ...state,
-                        loginLoading: false,
-                        companyId: companyId,
-                        isLogin: true,
-                    };
-                } else {
-                    return {
-                        ...state,
-                        loginLoading: false,
-                        isLogin: true,
-                    };
-                }
-            } else {
-                sessionStorage.setItem('token', accessToken);
-                return {
-                    ...state,
-                    loginLoading: false,
-                    isFirstLogin: statusAuth === statusLogin.FIRST_LOGIN,
-                    initPass: action.payload.initPass,
-                    isLogin: false,
-                };
-            }
+            console.log('action', action);
+            const { accessToken } = action.payload.body;
+            localStorage.setItem(TOKEN_KEY, accessToken);
+            localStorage.setItem(ADMIN_KEY, JSON.stringify(action.payload.body));
+            message.success(formatMessage({ id: 'LOGIN_SUCCESS' }));
+            return {
+                ...state,
+                loginLoading: false,
+                isLogin: true,
+            };
         },
 
         loginFail(state, action) {
@@ -108,37 +81,10 @@ export default {
                     companies: action.payload,
                 };
             } else {
-                var oldCompanyId = sessionStorage.getItem(COMPANY_ID);
-                if (oldCompanyId) {
-                    var index = _.findIndex(action.payload, function(o) {
-                        return o.id == Number(oldCompanyId);
-                    });
-                    if (index >= 0) {
-                        let companyId = Number(oldCompanyId);
-                        const { code } = action.payload.find(company => company.id === companyId);
-                        return {
-                            ...state,
-                            companies: action.payload,
-                            companyId: companyId,
-                            companyCode: code,
-                        };
-                    } else {
-                        sessionStorage.setItem(COMPANY_ID, action.payload[0].id);
-                    }
-                } else {
-                    sessionStorage.setItem(COMPANY_ID, action.payload[0].id);
-                }
-                return {
-                    ...state,
-                    companies: action.payload,
-                    companyId: action.payload[0].id,
-                    companyCode: action.payload[0].code,
-                };
             }
         },
 
         updateCompanySuccess(state, action) {
-            sessionStorage.setItem(COMPANY_ID, action.payload.id);
             return {
                 ...state,
                 companyId: action.payload.id,
@@ -153,8 +99,7 @@ export default {
         },
 
         logoutSuccess(state, action) {
-            handleRemoveSession();
-
+            handleRemoveLocal();
             return {
                 ...state,
                 isLogin: false,
@@ -180,13 +125,11 @@ export default {
 
     effects: {
         *changePassword(action, { call, put }) {
-            yield put({ type: 'loading' });
             try {
                 const res = yield call(authService.changePassword, action.payload);
                 if (res.status === 200) {
                     yield put({ type: 'changePasswordSuccess' });
                     message.success(res.body.message);
-                    router.push('/login');
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });
@@ -202,11 +145,7 @@ export default {
             try {
                 const res = yield call(authService.login, action.payload);
                 if (res.status === 200) {
-                    let payload = {
-                        data: res.body.data,
-                        initPass: action.payload.passwordRequest,
-                    };
-                    yield put({ type: 'loginSuccess', payload: payload });
+                    yield put({ type: 'loginSuccess', payload: res.body });
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'loginFail' });

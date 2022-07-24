@@ -1,16 +1,49 @@
-import React, { useState } from 'react';
-import styles from './styles.scss';
+import { Form, Input, message, Modal } from 'antd';
+import { connect } from 'dva';
+import React from 'react';
 import { formatMessage } from 'umi-plugin-react/locale';
-import { Form, Input, Select, Modal } from 'antd';
-const { Option } = Select;
+import styles from './styles.scss';
 
-export default function ChangePassword({ isModalVisible, setIsModalVisible }) {
+function ChangePassword({ dispatch, isModalVisible, setIsModalVisible }) {
     const [form] = Form.useForm();
-    const handleSubmit = values => {};
+    const handleSubmit = values => {
+        values.oldPass = values['oldPass'].trim();
+        values.newPass = values['newPass'].trim();
+        values.confirmNewPass = values['confirmNewPass'].trim();
+        if (values.oldPass === values.newPass) {
+            message.error(formatMessage({ id: 'NEW_PASSWORD_CANNOT_SAME_OLD_PASSWORD' }));
+            return;
+        }
+        if (values.confirmNewPass !== values.newPass) {
+            message.error(formatMessage({ id: 'CONFIRM_NEW_PASSWORD_FAIL' }));
+            return;
+        } else if (values.newPass.length < 6) {
+            message.warning(formatMessage({ id: 'PASSWORD_CANNOT_LESS_THAN_6_CHARACTERS' }));
+            return;
+        }
+        delete values.confirmNewPass;
+        dispatch({
+            type: 'MASTERDATA/changePassword',
+            payload: values,
+        });
+        setIsModalVisible(false);
+    };
 
     const handleClose = () => {
         setIsModalVisible(false);
     };
+    const _handleKeyDown = e => {
+        if (e.key === 'Enter') {
+            // Get the next input field
+            const nextSibling = document.querySelector(`input[name=password]`);
+
+            // If found, focus the next field
+            if (nextSibling !== null) {
+                nextSibling.focus();
+            }
+        }
+    };
+
     return (
         <>
             <Modal
@@ -22,26 +55,13 @@ export default function ChangePassword({ isModalVisible, setIsModalVisible }) {
                 onCancel={handleClose}
                 destroyOnClose
             >
-                <div className={styles.password}>
-                    <ul>
-                        <li style={{ color: 'rgb(39 22 22)' }}>
-                            password length should be between 8 and 32 symbols;
-                        </li>
-                        <li style={{ color: 'rgb(39 22 22)' }}>
-                            at least 1 upper case character; at least 1 lower case character;
-                        </li>
-                        <li style={{ color: 'rgb(39 22 22)' }}>at least 1 number;</li>
-                        <li style={{ color: 'rgb(39 22 22)' }}>
-                            at least 1 special character, for example: !@#$
-                        </li>
-                    </ul>
-                </div>
                 <div className={styles.form}>
                     <Form layout="vertical" form={form} scrollToFirstError onFinish={handleSubmit}>
                         <Form.Item
                             label={formatMessage({ id: 'OLD_PASSWORD' })}
                             name="oldPass"
                             rules={[{ required: true }]}
+                            onKeyPress={_handleKeyDown}
                         >
                             <Input.Password className={styles.textInputLight}></Input.Password>
                         </Form.Item>
@@ -65,3 +85,6 @@ export default function ChangePassword({ isModalVisible, setIsModalVisible }) {
         </>
     );
 }
+export default connect(({ MASTERDATA }) => ({
+    masterDataStore: MASTERDATA,
+}))(ChangePassword);

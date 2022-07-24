@@ -1,19 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './styles.scss';
 import { Form, Input, Select } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 import Cleave from 'cleave.js/react';
 import AddRecipient from './AddRecipient';
+import { connect } from 'dva';
 
 const { Option } = Select;
-export default function TopUp() {
+function AddWithdraw({ dispatch, withdrawStore }) {
+    const { listCardBank, addCardResponse } = withdrawStore;
     const [form] = Form.useForm();
     const [amountDeposit, setAmountDeposit] = React.useState();
 
-    const handleSubmit = values => {};
+    console.log('listCardBank', listCardBank);
+
+    useEffect(() => {
+        dispatch({ type: 'WITHDRAW/getCardBank' });
+    }, [dispatch, addCardResponse]);
+
+    const handleSubmit = values => {
+        const payload = {
+            ...values,
+            totalMoney: amountDeposit,
+        };
+        dispatch({ type: 'WITHDRAW/createWithdraw', payload });
+    };
 
     const handleChange = e => {
-        setAmountDeposit(e.currentTarget.rawValue);
+        setAmountDeposit(Number(e.currentTarget.rawValue));
     };
 
     return (
@@ -31,7 +45,7 @@ export default function TopUp() {
                     onFinish={handleSubmit}
                 >
                     <Form.Item
-                        name="phone"
+                        name="userCardBankId"
                         label={formatMessage({ id: 'ACCOUNT_IN' })}
                         rules={[
                             {
@@ -39,17 +53,24 @@ export default function TopUp() {
                             },
                         ]}
                     >
-                        <div className={styles.select}>
-                            <Select style={{ minWidth: 180 }} defaultValue="">
-                                <Option value="">{formatMessage({ id: 'CUSTOMER' })}</Option>
-                                <Option value="237">Khách hàng hủy giao dịch</Option>
-                            </Select>
-                        </div>{' '}
+                        <Select style={{ minWidth: 180 }}>
+                            {listCardBank.map((item, index) => {
+                                return (
+                                    <Option key={index} value={item.id}>
+                                        <span>{item.bankName}</span>
+                                        <span className="mx-2">-</span>
+                                        <span>{item.numberAccount}</span>
+                                        <span className="mx-2">-</span>
+                                        <span>{item.username}</span>
+                                    </Option>
+                                );
+                            })}
+                        </Select>
                     </Form.Item>
 
                     <Form.Item
                         label={formatMessage({ id: 'AMOUNT' })}
-                        name="amount"
+                        name="totalMoney"
                         rules={[{ required: true }]}
                     >
                         <Cleave
@@ -72,3 +93,7 @@ export default function TopUp() {
         </div>
     );
 }
+
+export default connect(({ WITHDRAW }) => ({
+    withdrawStore: WITHDRAW,
+}))(AddWithdraw);

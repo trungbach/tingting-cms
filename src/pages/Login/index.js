@@ -1,29 +1,36 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect } from 'react';
-import styles from './styles.scss';
-import { Form, Input, Checkbox } from 'antd';
-import { connect } from 'dva';
-import { Link, router } from 'umi';
-import { setLocale, formatMessage, getLocale } from 'umi-plugin-react/locale';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Form, Input } from 'antd';
+import { connect } from 'dva';
+import React, { useEffect } from 'react';
+import { Link, router } from 'umi';
+import { formatMessage, setLocale } from 'umi-plugin-react/locale';
+import styles from './styles.scss';
+
+function generateOtp(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function Login({ dispatch, masterDataStore }) {
-    let { isFirstLogin, isLogin } = masterDataStore;
-    // const locales = getLocale();
-    // console.log('locales', locales);
+    let { isLogin } = masterDataStore;
     setLocale('en-US');
-    useEffect(() => {
-        if (isFirstLogin) {
-            router.push('/change-first-password');
-        }
 
+    // tao ma otp 6 so luu vao storage
+    useEffect(() => {
+        const otp = generateOtp(1e5, 999999);
+        localStorage.setItem('otp', otp);
+    }, []);
+
+    // chuyen vao man dashboard neu da dang nhap
+    useEffect(() => {
         if (isLogin) {
-            router.push('/admin/overview');
+            router.push('/home/transaction');
         }
-    }, [isFirstLogin, isLogin]);
+    }, [isLogin]);
     const [form] = Form.useForm();
 
     const onSubmit = values => {
+        // const otp = localStorage.getItem('otp');
         values.username = values['username'].trim();
         values.password = values['password'].trim();
         dispatch({
@@ -83,10 +90,6 @@ function Login({ dispatch, masterDataStore }) {
                             />
                         </Form.Item>
                         <Form.Item>
-                            <Form.Item name="remember" valuePropName="checked" noStyle>
-                                <Checkbox>Remember me</Checkbox>
-                            </Form.Item>
-
                             <Link
                                 to="/forgot-password"
                                 style={{

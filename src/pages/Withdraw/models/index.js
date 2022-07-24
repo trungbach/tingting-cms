@@ -1,12 +1,22 @@
 import { message } from 'antd';
 import { handleErrorModel } from '@/util/function';
-import overviewService from '@/services/overview';
+import depositService from '@/services/deposit';
+import deviceService from '@/services/device';
+import accountService from '@/services/account';
+import { formatMessage } from 'umi-plugin-react/locale';
+
 export default {
-    namespace: 'DASHBOARD',
+    namespace: 'WITHDRAW',
     state: {
         loading: false,
-        dashboardData: {},
-        transactionResponse: [],
+        listWithdraw: [],
+        totalRow: 0,
+        listDevices: [],
+        listMerchant: [],
+        deleteResponse: undefined,
+        listCardBank: [],
+        listPaymentType: [],
+        addCardResponse: undefined,
     },
     reducers: {
         loading(state, action) {
@@ -23,31 +33,67 @@ export default {
             };
         },
 
-        getDashboardSuccess(state, action) {
+        getWithdrawSuccess(state, action) {
             return {
                 ...state,
                 loading: false,
-                dashboardData: action.payload,
+                listWithdraw: action.payload.body,
+                totalRow: action.payload.totalRecord,
             };
         },
-        getTransactionChartSuccess(state, action) {
+        getDevicesSuccess(state, action) {
+            return {
+                ...state,
+                listDevices: action.payload.body,
+            };
+        },
+        getMerchantSuccess(state, action) {
+            return {
+                ...state,
+
+                listMerchant: action.payload.body,
+            };
+        },
+
+        getCardBankSuccess(state, action) {
+            console.log('action', action.payload);
+            return {
+                ...state,
+                listCardBank: action.payload.body,
+            };
+        },
+
+        deleteTransactionSuccess(state, action) {
             return {
                 ...state,
                 loading: false,
-                transactionResponse: action.payload,
+                deleteResponse: action.payload.body,
+            };
+        },
+
+        getPaymentTypeSuccess(state, action) {
+            return {
+                ...state,
+                listPaymentType: action.payload.body,
+            };
+        },
+        createCardBankSuccess(state, action) {
+            return {
+                ...state,
+                addCardResponse: action.payload.body,
             };
         },
     },
 
     effects: {
-        *getDashboard(action, { call, put }) {
+        *getWithdraws(action, { call, put }) {
             yield put({ type: 'loading' });
             try {
-                const res = yield call(overviewService.getDashboard, action.payload);
+                const res = yield call(depositService.getDeposits, action.payload);
                 if (res.status === 200) {
                     yield put({
-                        type: 'getDashboardSuccess',
-                        payload: res.body.data,
+                        type: 'getWithdrawSuccess',
+                        payload: res.body,
                     });
                 } else {
                     message.error(res.body.message);
@@ -58,14 +104,106 @@ export default {
                 yield put({ type: 'error' });
             }
         },
-        *getTransactionChart(action, { call, put }) {
+
+        *deleteTransaction(action, { call, put }) {
+            yield put({ type: 'loading' });
             try {
-                const res = yield call(overviewService.getTransactionChart, action.payload);
+                const res = yield call(depositService.deleteTransaction, action.payload);
                 if (res.status === 200) {
                     yield put({
-                        type: 'getTransactionChartSuccess',
-                        payload: res.body.data,
+                        type: 'deleteTransactionSuccess',
+                        payload: res.body,
                     });
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+
+        *getMerchants(action, { call, put }) {
+            try {
+                const res = yield call(accountService.getAccounts, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'getMerchantSuccess', payload: res.body });
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+
+        *getDevices(action, { call, put }) {
+            try {
+                const res = yield call(deviceService.getDevices, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'getDevicesSuccess', payload: res.body });
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+
+        *createWithdraw(action, { call, put }) {
+            try {
+                const res = yield call(depositService.createWithdraw, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'success', payload: res.body });
+                    message.success(formatMessage({ id: 'CREATE_WITHDRAW_SUCCESS' }));
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+        *getCardBank(action, { call, put }) {
+            try {
+                const res = yield call(depositService.getCardBank, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'getCardBankSuccess', payload: res.body });
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+
+        *createCardBank(action, { call, put }) {
+            try {
+                const res = yield call(depositService.createCardBank, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'createCardBankSuccess', payload: res.body });
+                    message.success(formatMessage({ id: 'SUCCESS' }));
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+        *getPaymentType(action, { call, put }) {
+            try {
+                const res = yield call(depositService.getPaymentType, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'getPaymentTypeSuccess', payload: res.body });
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });

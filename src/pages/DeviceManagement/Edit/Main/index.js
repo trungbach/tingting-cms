@@ -9,7 +9,7 @@ import moment from 'moment';
 import React, { useEffect, useState, useCallback } from 'react';
 import { router, withRouter } from 'umi';
 import styles from './styles.scss';
-const UpdateAccount = props => {
+const UpdateDevice = props => {
     const { dispatch, accountStore, masterdataStore, match } = props;
     const { detailAccount, loading } = accountStore;
     const { companyId } = masterdataStore;
@@ -274,4 +274,4 @@ const UpdateAccount = props => {
 export default connect(({ ACCOUNT, MASTERDATA }) => ({
     masterdataStore: MASTERDATA,
     accountStore: ACCOUNT,
-}))(withRouter(UpdateAccount));
+}))(withRouter(UpdateDevice));

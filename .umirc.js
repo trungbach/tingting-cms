@@ -13,21 +13,10 @@ export default {
             component: '../pages/Login',
             Routes: ['./src/components/AdminAuthentication'],
         },
-        {
-            path: '/forgot-password',
-            component: '../pages/ForgotPassword',
-            Routes: ['./src/components/AdminAuthentication'],
-        },
 
         {
-            path: '/change-password',
-            component: '../pages/ChangePassword',
-            Routes: ['./src/components/AdminAuthentication'],
-        },
-
-        {
-            path: '/change-first-password',
-            component: '../pages/Login/ChangePasswordInit',
+            path: '/payment',
+            component: '../pages/Payment',
             Routes: ['./src/components/AdminAuthentication'],
         },
 
@@ -60,6 +49,12 @@ export default {
                     component: '../pages/DeviceManagement',
                     Routes: ['./src/components/AdminAuthentication'],
                 },
+
+                {
+                    path: '/home/update-device/:id',
+                    component: '../pages/DeviceManagement/Edit',
+                    Routes: ['./src/components/AdminAuthentication'],
+                },
                 {
                     path: '/home/tranfer-balance',
                     component: '../pages/TransferBalance',
@@ -70,109 +65,21 @@ export default {
                     component: '../pages/Admin',
                     Routes: ['./src/components/AdminAuthentication'],
                 },
-            ],
-        },
-
-        {
-            path: '/admin',
-            component: '../Wrappers',
-            routes: [
                 {
-                    path: '/admin',
-                    component: '../pages/Overview',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-                {
-                    path: '/admin/overview',
-                    component: '../pages/Overview',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-
-                // Admin Account
-
-                {
-                    path: '/admin/my-account',
-                    component: '../pages/MyAccount',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-
-                // Transaction Page
-                {
-                    path: '/admin/transaction-manage',
-                    component: '../pages/TransactionManage',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-
-                {
-                    path: '/admin/detail-transaction/:transactionCode',
-                    component: '../pages/TransactionManage/Detail',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-
-                // Acount Page
-                {
-                    path: '/admin/account-manage',
-                    component: '../pages/AccountManage',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-
-                {
-                    path: '/admin/create-account',
+                    path: '/home/create-account',
                     component: '../pages/AccountManage/Create',
                     Routes: ['./src/components/AdminAuthentication'],
                 },
 
                 {
-                    path: '/admin/edit-account/:userCode',
-                    component: '../pages/AccountManage/Edit',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-                {
-                    path: '/admin/detail-account/:userCode',
-                    component: '../pages/AccountManage/Detail',
+                    path: '/home/create-card',
+                    component: '../pages/DeviceManagement/Create',
                     Routes: ['./src/components/AdminAuthentication'],
                 },
 
                 {
-                    path: '/admin/contract-account/:userCode',
-                    component: '../pages/AccountManage/Contract',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-
-                {
-                    path: '/admin/bank-account/:userCode',
-                    component: '../pages/AccountManage/Bank',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-
-                // Company Page
-                {
-                    path: '/admin/company-manage',
-                    component: '../pages/CompanyManage',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-
-                {
-                    path: '/admin/create-company',
-                    component: '../pages/CompanyManage/Create',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-
-                {
-                    path: '/admin/detail-company/:companyCode',
-                    component: '../pages/CompanyManage/Detail',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-
-                {
-                    path: '/admin/update-company/:companyCode',
-                    component: '../pages/CompanyManage/Edit',
-                    Routes: ['./src/components/AdminAuthentication'],
-                },
-
-                {
-                    path: '/admin/borrow-manage',
-                    component: '../pages/BorrowManage',
+                    path: '/home/ip-address',
+                    component: '../pages/IPAddress',
                     Routes: ['./src/components/AdminAuthentication'],
                 },
             ],

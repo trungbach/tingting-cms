@@ -1,183 +1,230 @@
-import ic_bank from '@/assets/image/ic_bank.png';
-import ic_contract from '@/assets/image/ic_contract.png';
-import ic_delete from '@/assets/image/ic_delete.svg';
-import ic_edit from '@/assets/image/ic_edit.svg';
-import ic_restore from '@/assets/image/ic_restore.svg';
-import ic_search from '@/assets/image/ic_search.svg';
 import EmptyComponent from '@/components/EmptyComponent';
 import Loading from '@/components/Loading';
-import { ADMIN_KEY, PAGE_SIZE, ROLE_ADMIN_SYSTEM } from '@/config/constant';
-import { useSessionStorage } from '@/hooks';
-import { Input, Modal, Pagination, Select, Switch, DatePicker } from 'antd';
+import { ADMIN_KEY, DATE_FILTER, DeviceStatus, PAGE_SIZE } from '@/config/constant';
+import { useLocalStorage } from '@/hooks';
+import { DatePicker, Input, Modal, Pagination, Select } from 'antd';
 import { connect } from 'dva';
-import React, { useCallback, useEffect, useState } from 'react';
-import { router, withRouter } from 'umi';
 import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { router, withRouter } from 'umi';
 import { formatMessage } from 'umi-plugin-react/locale';
-import { DATE_FILTER } from '@/config/constant';
-
+import { DeviceStatusValue, Role } from '../../../config/constant';
+import { formatVnd } from '../../../util/function';
+import ModalUpdateStatus from '../ModalUpdateStatus';
 import styles from './styles.scss';
+import ic_edit from '@/assets/image/ic_edit.svg';
+import ic_delete from '@/assets/image/ic_delete.svg';
 
+import ModalUpdateDailyWithdraw from '../ModalUpdateDailyWithdraw';
 const { RangePicker } = DatePicker;
 
 const { confirm } = Modal;
 const { Option } = Select;
-const roleUser = {
-    0: 'Nhân viên',
-    1: 'Quản trị hệ thống',
-    2: 'Quản trị doanh nghiệp',
-};
-
-const roleFilter = {
-    ROLE_USER: 'ROLE_USER',
-    ROLE_ADMIN: 'ROLE_ADMIN',
-    ROLE_COMPANY: 'ROLE_COMPANY',
-};
-
-const statusUser = {
-    UN_APPROVED: 0,
-    APPROVED: 1,
-};
 
 function DeviceManagement(props) {
-    let { dispatch, accountStore, masterStore } = props;
-    let { accounts, totalRow, loading, deleteResponse, activeResponse } = accountStore;
-    let { companyId } = masterStore;
-    const [admin] = useSessionStorage(ADMIN_KEY);
+    let { dispatch, deviceStore } = props;
+    let { devices, totalRow, loading, updateSuccess, deleteSuccess, listPaymentType } = deviceStore;
+    const [admin] = useLocalStorage(ADMIN_KEY);
     const [pageIndex, setPageIndex] = useState(1);
-    const [name, setName] = useState();
-    const [rangeTime, setRangeTime] = useState([]);
-    const [role, setRole] = useState(
-        admin?.role === ROLE_ADMIN_SYSTEM ? roleFilter.ROLE_ADMIN : roleFilter.ROLE_COMPANY,
-    );
-
-    const [deleted, setDeleted] = useState(false);
-
-    const getAccounts = useCallback(
-        payload => {
-            dispatch({ type: 'ACCOUNT/getAccounts', payload });
-        },
-        [dispatch],
-    );
-
-    const deleteAccount = useCallback(
-        payload => {
-            dispatch({ type: 'ACCOUNT/deleteAccount', payload });
-        },
-        [dispatch],
-    );
-
-    const hideSelectCompanies = useCallback(
-        payload => {
-            dispatch({ type: 'MASTERDATA/hideSelectCompanies', payload });
-        },
-        [dispatch],
-    );
+    const [paymentTypeId, setPaymentTypeId] = useState();
+    const [username, setUsername] = useState();
+    const [accountNumber, setAccountNumber] = useState();
+    // const [rangeTime, setRangeTime] = useState([]);
+    const [status, setStatus] = useState();
+    const [currentUpdate, setCurrentUpdate] = useState({
+        showStatus: false,
+        id: undefined,
+        status: undefined,
+    });
+    const [currentWithdraw, setCurrentWithdraw] = useState({
+        showWithdraw: false,
+        id: undefined,
+        dailyWithdrawMoney: undefined,
+    });
 
     useEffect(() => {
-        if (companyId) {
-            let payload = {
-                page: pageIndex - 1,
-                name: name,
-                role: role,
-                deleted: deleted,
-            };
-            if (role !== roleFilter.ROLE_ADMIN) {
-                payload.companyId = companyId;
-            }
-            getAccounts(payload);
-        }
-    }, [pageIndex, name, role, deleted, deleteResponse, activeResponse, companyId]);
+        dispatch({ type: 'DEVICE/getPaymentType' });
+    }, [dispatch]);
 
-    const goToCreate = () => {
-        router.push('/home/create-account');
-    };
+    useEffect(() => {
+        let payload = {
+            page: pageIndex - 1,
+            accountNumber,
+            status,
+            username,
+            paymentTypeId,
+        };
+        dispatch({ type: 'DEVICE/getDevices', payload });
+    }, [
+        pageIndex,
+        accountNumber,
+        username,
+        status,
+        paymentTypeId,
+        dispatch,
+        updateSuccess,
+        deleteSuccess,
+    ]);
 
-    const goToEdit = accountCode => {
-        router.push(`/admin/edit-account/${accountCode}`);
-    };
-
-    const handleDelete = accountCode => {
+    const handleDelete = deviceId => {
         confirm({
-            title: 'Bạn có chắc chắn muốn xóa tài khoản này?',
+            title: formatMessage({ id: 'ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_DEVICE' }),
             onOk: () => {
-                deleteAccount({ code: accountCode });
+                const payload = { id: deviceId };
+                dispatch({ type: 'DEVICE/deleteDevice', payload });
             },
             onCancel: () => {},
         });
     };
 
-    const listDevice = [
-        {
-            name: 'device1',
-            accountHolder: 'User1',
-            accountNumber: '12345678898',
-            cardNumber: '12345678898',
-            balance: 99999999,
-            status: 'Active',
-        },
-        {
-            name: 'device2',
-            accountHolder: 'User2',
-            accountNumber: '12345678898',
-            cardNumber: '12345678898',
-            balance: 99999999,
-            status: 'Active',
-        },
-    ];
+    const goToEdit = id => {
+        router.push(`/home/update-device/${id}`);
+    };
 
     const renderDataUsers = loading ? (
         <Loading />
-    ) : listDevice.length === 0 ? (
+    ) : devices.length === 0 ? (
         <EmptyComponent />
     ) : (
-        listDevice.map((value, index) => (
+        devices.map((value, index) => (
             <tr className="row text-center" key={(value, index)}>
-                <td className="col-2">{value.name}</td>
-                <td className="col-2">{value.accountHolder}</td>
-                <td className="col-2">{value.accountNumber}</td>
-                <td className="col-2">{value.cardNumber}</td>
-                <td className="col-2">{value.balance}</td>
+                {/* <td className="col-2">{value.deviceName}</td> */}
+                <td className="col-2">{value.username}</td>
                 <td className="col-2">
-                    <div className={styles.activeStatus}>{value.status}</div>
+                    [{value.bankName}]{value.numberAccount}
+                </td>
+                <td className={`col-1 ${styles.moneyColor}`}>{formatVnd(value.totalMoney)}</td>
+                <td className={`col-2 ${styles.moneyColor}`}>
+                    <div>+{formatVnd(value.dailySendMoney)}</div>
+                    <div>-{formatVnd(value.withdrawMoney)}</div>
+                </td>
+                <td className={`col-2 ${styles.moneyColor}`}>
+                    <div>+{formatVnd(value.allSendMoney)}</div>
+                    <div>-{formatVnd(value.allWithdrawMoney)}</div>
+                </td>
+                <td className="col-1">
+                    {formatVnd(value.dailyWithdrawMoney)}
+                    {admin?.role === Role.ROLE_ADMIN && (
+                        <span
+                            onClick={() =>
+                                setCurrentWithdraw({
+                                    showWithdraw: true,
+                                    id: value.id,
+                                    dailyWithdrawMoney: value.dailyWithdrawMoney,
+                                })
+                            }
+                            style={{ marginLeft: 5, cursor: 'pointer' }}
+                        >
+                            <img className={styles.iconSize} src={ic_edit} alt="" />
+                        </span>
+                    )}
+                </td>
+                <td
+                    className={
+                        value.status === DeviceStatusValue.off
+                            ? `col-1 ${styles.lockedStatus}`
+                            : value.status === DeviceStatusValue.on
+                            ? `col-1 ${styles.activeStatus}`
+                            : `col-1 ${styles.pauseStatus}`
+                    }
+                    onClick={() =>
+                        setCurrentUpdate({
+                            showStatus: true,
+                            id: value.id,
+                            status: value.status,
+                        })
+                    }
+                >
+                    {formatMessage({ id: DeviceStatus[value.status] })}
+                </td>
+                <td className="col-1">
+                    <img
+                        style={{ marginRight: 7 }}
+                        onClick={() => goToEdit(value.id)}
+                        className={styles.iconSize}
+                        src={ic_edit}
+                        alt=""
+                    />
+                    <img
+                        className={styles.sizeIcon}
+                        src={ic_delete}
+                        onClick={() => handleDelete(value.id)}
+                        alt="Delete"
+                    />
                 </td>
             </tr>
         ))
     );
+    function disabledDate(current) {
+        // Can not select days after today and today
+        return current && current > moment().endOf('day');
+    }
+
+    const goToCreate = () => {
+        router.push('/home/create-card');
+    };
+
+    const key = 'sortNameBank';
+    const arrayUniqueByBankName = [
+        ...new Map(listPaymentType.map(item => [item[key], item])).values(),
+    ];
+
     return (
         <div className={styles.content}>
             <div className={styles.header}>
                 <div>
                     <h3>{formatMessage({ id: 'DEVICE_MANAGEMENT' })}</h3>
                 </div>
+                {/* <div className={styles.datePicker}>
+                    <label className="me-2">{formatMessage({ id: 'TIME' })}: </label>
+                    <RangePicker
+                        format={DATE_FILTER}
+                        disabledDate={disabledDate}
+                        onChange={(dates, dateStrings) => setRangeTime(dateStrings)}
+                    />
+                </div> */}
+                <div style={{ height: 40 }}>
+                    <button className={styles.primaryBtn} onClick={goToCreate}>
+                        {formatMessage({ id: 'ADD_CARD' })}
+                    </button>
+                </div>
             </div>
             <div className={styles.pageFilter}>
-                <div style={{ height: 40 }}>
-                    <div className="mb-1">{formatMessage({ id: 'DEVICE_NAME' })}:</div>
-                    <Input className={styles.textInput} />
-                </div>
-                <div style={{ height: 40 }}>
-                    <div className="mb-1">{formatMessage({ id: 'CARD_NUMBER' })}:</div>
-                    <Input className={styles.textInput} />
-                </div>
-                <div style={{ height: 40 }}>
-                    <div className="mb-1">{formatMessage({ id: 'ACCOUNT_HOLDER' })}:</div>
-                    <Input className={styles.textInput} />
-                </div>
-                <div style={{ height: 40 }}>
-                    <div className="mb-1">{formatMessage({ id: 'ACCOUNT_NUMBER' })}:</div>
-                    <Input className={styles.textInput} />
-                </div>
                 <div className={styles.select}>
-                    <div className="mb-1">{formatMessage({ id: 'STATUS' })}:</div>
+                    <div className="mb-1"> {formatMessage({ id: 'STATUS' })}:</div>
                     <Select
                         style={{ minWidth: 180 }}
                         defaultValue=""
-                        onChange={value => setRole(value)}
+                        onChange={value => setStatus(value)}
                     >
                         <Option value="">{formatMessage({ id: 'ALL' })}</Option>
-                        <Option value="1">{formatMessage({ id: 'ACTIVE' })}</Option>
-                        <Option value="3">{formatMessage({ id: 'LOCKED' })}</Option>
+
+                        {Object.keys(DeviceStatusValue).map((item, index) => {
+                            return <Option value={item}>{formatMessage({ id: `${item}` })}</Option>;
+                        })}
+                    </Select>
+                </div>
+
+                <div style={{ height: 40 }}>
+                    <div className="mb-1">{formatMessage({ id: 'ACCOUNT_HOLDER' })}:</div>
+                    <Input
+                        onChange={e => setUsername(e.target.value)}
+                        className={styles.textInput}
+                    />
+                </div>
+                <div style={{ height: 40 }}>
+                    <div className="mb-1">{formatMessage({ id: 'ACCOUNT_NUMBER' })}:</div>
+                    <Input
+                        onChange={e => setAccountNumber(e.target.value)}
+                        className={styles.textInput}
+                    />
+                </div>
+                <div style={{ height: 40 }}>
+                    <div className="mb-1">{formatMessage({ id: 'BANK_NAME' })}:</div>
+                    <Select style={{ minWidth: 180 }} onChange={value => setPaymentTypeId(value)}>
+                        {arrayUniqueByBankName.map((item, index) => {
+                            return <Option value={item.id}>{item.sortNameBank}</Option>;
+                        })}
                     </Select>
                 </div>
             </div>
@@ -186,12 +233,17 @@ function DeviceManagement(props) {
                 <table>
                     <thead>
                         <tr className="text-center">
-                            <th className="col-2"> {formatMessage({ id: 'DEVICE_NAME' })}</th>
+                            {/* <th className="col-2"> {formatMessage({ id: 'DEVICE_NAME' })}</th> */}
                             <th className="col-2"> {formatMessage({ id: 'ACCOUNT_HOLDER' })}</th>
-                            <th className="col-2"> {formatMessage({ id: 'ACCOUNT_NUMBER' })}</th>
-                            <th className="col-2">{formatMessage({ id: 'CARD_NUMBER' })}</th>
-                            <th className="col-2">{formatMessage({ id: 'BALANCE' })}</th>
-                            <th className="col-2">{formatMessage({ id: 'STATUS' })}</th>
+                            <th className="col-2">{formatMessage({ id: 'ACCOUNT_NUMBER' })}</th>
+                            <th className="col-1">{formatMessage({ id: 'BALANCE' })}</th>
+                            <th className="col-2">{formatMessage({ id: 'CUMULATIVE_TODAY' })}</th>
+                            <th className="col-2">{formatMessage({ id: 'ALL_CUMULATIVE' })}</th>
+                            <th className="col-1">
+                                {formatMessage({ id: 'WITHDRAWAL_DAILY_LIMIT' })}
+                            </th>
+                            <th className="col-1">{formatMessage({ id: 'STATUS' })}</th>
+                            <th className="col-1">{formatMessage({ id: 'ACTION' })}</th>
                         </tr>
                     </thead>
                     <tbody>{renderDataUsers}</tbody>
@@ -207,11 +259,17 @@ function DeviceManagement(props) {
                     />
                 </div>
             </div>
+            <ModalUpdateStatus currentUpdate={currentUpdate} setCurrentUpdate={setCurrentUpdate} />
+            {currentWithdraw.showWithdraw && (
+                <ModalUpdateDailyWithdraw
+                    currentWithdraw={currentWithdraw}
+                    setCurrentWithdraw={setCurrentWithdraw}
+                />
+            )}
         </div>
     );
 }
 
-export default connect(({ ACCOUNT, MASTERDATA }) => ({
-    accountStore: ACCOUNT,
-    masterStore: MASTERDATA,
+export default connect(({ DEVICE }) => ({
+    deviceStore: DEVICE,
 }))(withRouter(DeviceManagement));

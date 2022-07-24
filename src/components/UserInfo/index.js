@@ -1,18 +1,19 @@
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Modal, Select, Dropdown, Space, Menu } from 'antd';
-import { memo, useEffect, useState } from 'react';
-import styles from './style.scss';
-import { router } from 'umi';
-import img_vn from '@/assets/image/img_vn.png';
 import img_cn from '@/assets/image/img_cn.png';
 import img_en from '@/assets/image/img_en.png';
-import { setLocale, getLocale, formatMessage } from 'umi-plugin-react/locale';
-import { DownOutlined } from '@ant-design/icons';
+import img_vn from '@/assets/image/img_vn.png';
+import { ADMIN_KEY } from '@/config/constant';
+import { useLocalStorage } from '@/hooks';
+import { DownOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Dropdown, Menu, Modal, Select } from 'antd';
+import { connect } from 'dva';
+import { memo, useState } from 'react';
+import { formatMessage, getLocale, setLocale } from 'umi-plugin-react/locale';
 import ChangePassword from './ChangePassword';
+import styles from './style.scss';
 
 const { Option } = Select;
 
-function UserInfo() {
+function UserInfo({ dispatch, masterDataStore }) {
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const showModal = () => {
@@ -23,11 +24,14 @@ function UserInfo() {
             okText: formatMessage({ id: 'OK' }),
             cancelText: formatMessage({ id: 'CANCEL' }),
             onOk: () => {
-                // dispatch(logout())
-                router.push('/login');
+                dispatch({
+                    type: 'MASTERDATA/logout',
+                });
             },
         });
     };
+
+    const [admin] = useLocalStorage(ADMIN_KEY);
 
     const menu = (
         <Menu
@@ -80,7 +84,7 @@ function UserInfo() {
                                         cursor: 'pointer',
                                     }}
                                 >
-                                    <span>Trung</span>
+                                    <span>{admin?.phone}</span>
                                     <DownOutlined />
                                 </div>
                             </Dropdown>
@@ -93,4 +97,6 @@ function UserInfo() {
     );
 }
 
-export default memo(UserInfo);
+export default connect(({ MASTERDATA }) => ({
+    masterDataStore: MASTERDATA,
+}))(memo(UserInfo));

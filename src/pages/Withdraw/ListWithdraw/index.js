@@ -1,159 +1,74 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'dva';
-import styles from './styles.scss';
-import { formatVnd } from '@/util/function';
-import { formatMessage } from 'umi-plugin-react/locale';
-import { DatePicker, message, Select, Input } from 'antd';
-import { DATE_FILTER } from '@/config/constant';
-import moment from 'moment';
-import TableData from './TableData';
-import { TOKEN_KEY } from '@/config/constant';
-import cookies from 'js-cookie';
-import config from '@/config/index';
 import ic_export from '@/assets/image/ic_export.svg';
-import { router, withRouter } from 'umi';
+import {
+    DATE_TRANSACTION,
+    PaymentType,
+    Role,
+    RoleName,
+    TOKEN_KEY,
+    TransactionStatus,
+    DATE_FORMAT_TRANSACTION,
+} from '@/config/constant';
+import config from '@/config/index';
+import { DatePicker, Input, message, Select } from 'antd';
+import { connect } from 'dva';
+import cookies from 'js-cookie';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { withRouter } from 'umi';
+import { formatMessage } from 'umi-plugin-react/locale';
+import styles from './styles.scss';
+import TableData from './TableData';
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 function ListWithdraw(props) {
-    const { dashboardStore, dispatch, location } = props;
-    const { dashboardData } = dashboardStore;
+    const { withdrawStore, dispatch } = props;
+    const { listMerchant, deleteResponse, updateResponse } = withdrawStore;
     const [rangeTime, setRangeTime] = useState([]);
-    const [status, setStatus] = useState();
-    const [channel, setChannel] = useState();
+    const [transactionStatus, setTransactionStatus] = useState();
+    const [paymentType, setPaymentType] = useState();
     const [customer, setCustomer] = useState();
-    const [merchantUser, setMerchantUser] = useState();
-    const [orderId, setOrderId] = useState();
+    const [username, setUsername] = useState();
+    const [orderCode, setOrderCode] = useState();
 
-    console.log('router', location.query.tab);
+    const [pageIndex, setPageIndex] = useState(1);
+
+    useEffect(() => {
+        const payload = {
+            page: 0,
+            role: RoleName[Role.ROLE_USER],
+        };
+        dispatch({ type: 'WITHDRAW/getMerchants', payload });
+    }, [dispatch]);
+
+    useEffect(() => {
+        let payload = {
+            page: pageIndex - 1,
+            transactionType: 'withdraw_money',
+            transactionStatus,
+            username,
+            paymentType,
+            orderCode,
+            startDate: rangeTime?.[0],
+            endDate: rangeTime?.[1],
+        };
+        dispatch({ type: 'WITHDRAW/getWithdraws', payload });
+    }, [
+        pageIndex,
+        username,
+        deleteResponse,
+        transactionStatus,
+        orderCode,
+        paymentType,
+        updateResponse,
+        rangeTime,
+        dispatch,
+    ]);
 
     function disabledDate(current) {
         // Can not select days after today and today
         return current && current > moment().endOf('day');
     }
-
-    const listData = [
-        {
-            customer: 'Customer',
-            orderId: 111,
-            channel: 'MoMo QR',
-            createdAt: '2020-12-03',
-            amount: 1000,
-            status: 'PENDING',
-            userId: '123',
-            balance: 2000,
-        },
-        {
-            customer: 'Customer',
-            orderId: 111,
-            channel: 'MoMo QR',
-            createdAt: '2020-12-03',
-            amount: 1000,
-            status: 'PENDING',
-            userId: '123',
-            balance: 2000,
-        },
-        {
-            customer: 'Customer',
-            orderId: 111,
-            channel: 'MoMo QR',
-            createdAt: '2020-12-03',
-            amount: 1000,
-            status: 'PENDING',
-            userId: '123',
-            balance: 2000,
-        },
-        {
-            customer: 'Customer',
-            orderId: 111,
-            channel: 'MoMo QR',
-            createdAt: '2020-12-03',
-            amount: 1000,
-            status: 'PENDING',
-            userId: '123',
-            balance: 2000,
-        },
-        {
-            customer: 'Customer',
-            orderId: 111,
-            channel: 'MoMo QR',
-            createdAt: '2020-12-03',
-            amount: 1000,
-            status: 'PENDING',
-            userId: '123',
-            balance: 2000,
-        },
-        {
-            customer: 'Customer',
-            orderId: 111,
-            channel: 'MoMo QR',
-            createdAt: '2020-12-03',
-            amount: 1000,
-            status: 'PENDING',
-            userId: '123',
-            balance: 2000,
-        },
-        {
-            customer: 'Customer',
-            orderId: 111,
-            channel: 'MoMo QR',
-            createdAt: '2020-12-03',
-            amount: 1000,
-            status: 'PENDING',
-            userId: '123',
-            balance: 2000,
-        },
-        {
-            customer: 'Customer',
-            orderId: 111,
-            channel: 'MoMo QR',
-            createdAt: '2020-12-03',
-            amount: 1000,
-            status: 'PENDING',
-            userId: '123',
-            balance: 2000,
-        },
-        {
-            customer: 'Customer',
-            orderId: 111,
-            channel: 'MoMo QR',
-            createdAt: '2020-12-03',
-            amount: 1000,
-            status: 'PENDING',
-            userId: '123',
-            balance: 2000,
-        },
-        {
-            customer: 'Customer',
-            orderId: 111,
-            channel: 'MoMo QR',
-            createdAt: '2020-12-03',
-            amount: 1000,
-            status: 'PENDING',
-            userId: '123',
-            balance: 2000,
-        },
-        {
-            customer: 'Customer',
-            orderId: 111,
-            channel: 'MoMo QR',
-            createdAt: '2020-12-03',
-            amount: 1000,
-            status: 'PENDING',
-            userId: '123',
-            balance: 2000,
-        },
-        {
-            customer: 'Customer',
-            orderId: 111,
-            channel: 'MoMo QR',
-            createdAt: '2020-12-03',
-            amount: 1000,
-            status: 'PENDING',
-            userId: '123',
-            balance: 2000,
-        },
-    ];
 
     const getQueryString = queries => {
         return Object.keys(queries)
@@ -207,12 +122,12 @@ function ListWithdraw(props) {
         <div className={styles.content}>
             <div className={styles.header}>
                 <div>
-                    <h3>{formatMessage({ id: 'ALL_TRANSACTIONS' })}</h3>
+                    <h3>{formatMessage({ id: 'WITHDRAW_LIST' })}</h3>
                 </div>
                 <div className={styles.datePicker}>
                     <label className="me-2">{formatMessage({ id: 'TIME' })}: </label>
                     <RangePicker
-                        format={DATE_FILTER}
+                        format={DATE_TRANSACTION}
                         disabledDate={disabledDate}
                         onChange={(dates, dateStrings) => setRangeTime(dateStrings)}
                     />
@@ -220,18 +135,16 @@ function ListWithdraw(props) {
             </div>
             <div className={styles.pageFilter}>
                 <div className={styles.select}>
-                    <div className="mb-1">{formatMessage({ id: 'CUSTOMER' })}:</div>
+                    <div className="mb-1">{formatMessage({ id: 'MERCHANT' })}:</div>
                     <Select
                         style={{ minWidth: 180 }}
                         defaultValue=""
                         onChange={value => setCustomer(value)}
                     >
-                        <Option value="">{formatMessage({ id: 'CUSTOMER' })}</Option>
-                        <Option value="23">Chờ xử lý</Option>
-                        <Option value="234">Đang xử lý</Option>
-                        <Option value="235">Hoàn thành</Option>
-                        <Option value="236">Từ chối</Option>
-                        <Option value="237">Khách hàng hủy giao dịch</Option>
+                        <Option value={''}>{formatMessage({ id: 'ALL' })}</Option>
+                        {listMerchant.map(item => {
+                            return <Option value={item.id}>{item.phone}</Option>;
+                        })}
                     </Select>
                 </div>
 
@@ -240,14 +153,12 @@ function ListWithdraw(props) {
                     <Select
                         style={{ minWidth: 180 }}
                         defaultValue=""
-                        onChange={value => setChannel(value)}
+                        onChange={value => setPaymentType(value)}
                     >
-                        <Option value="">{formatMessage({ id: 'CHANNEL' })}</Option>
-                        <Option value="23">Chờ xử lý</Option>
-                        <Option value="234">Đang xử lý</Option>
-                        <Option value="235">Hoàn thành</Option>
-                        <Option value="236">Từ chối</Option>
-                        <Option value="237">Khách hàng hủy giao dịch</Option>
+                        <Option value="">{formatMessage({ id: 'ALL' })}</Option>
+                        {Object.keys(PaymentType).map((item, index) => {
+                            return <Option value={item}>{formatMessage({ id: `${item}` })}</Option>;
+                        })}
                     </Select>
                 </div>
 
@@ -256,29 +167,27 @@ function ListWithdraw(props) {
                     <Select
                         style={{ minWidth: 180 }}
                         defaultValue=""
-                        onChange={value => setStatus(value)}
+                        onChange={value => setTransactionStatus(value)}
                     >
-                        <Option value="">{formatMessage({ id: 'STATUS' })}</Option>
-                        <Option value="23">Chờ xử lý</Option>
-                        <Option value="234">Đang xử lý</Option>
-                        <Option value="235">Hoàn thành</Option>
-                        <Option value="236">Từ chối</Option>
-                        <Option value="237">Khách hàng hủy giao dịch</Option>
+                        <Option value="">{formatMessage({ id: 'ALL' })}</Option>
+                        {Object.keys(TransactionStatus).map((item, index) => {
+                            return <Option value={item}>{formatMessage({ id: `${item}` })}</Option>;
+                        })}
                     </Select>
                 </div>
                 <div className={styles.select}>
-                    <div className="mb-1">Merchant User:</div>
+                    <div className="mb-1">{formatMessage({ id: 'USERNAME' })}:</div>
                     <Input
                         className={styles.textInput}
-                        onChange={e => setMerchantUser(e.target.value)}
+                        onChange={e => setUsername(e.target.value)}
                     />
                 </div>
 
                 <div className={styles.select}>
-                    <div className="mb-1">Order ID:</div>
+                    <div className="mb-1">{formatMessage({ id: 'MERCHANT_ORDER_ID' })}</div>
                     <Input
                         className={styles.textInput}
-                        onChange={e => setOrderId(e.target.value)}
+                        onChange={e => setOrderCode(e.target.value)}
                     />
                 </div>
 
@@ -287,11 +196,11 @@ function ListWithdraw(props) {
                     {formatMessage({ id: 'EXPORT' })}
                 </button>
             </div>
-            <TableData listData={listData} />
+            <TableData pageIndex={pageIndex} setPageIndex={setPageIndex} />
         </div>
     );
 }
 
-export default connect(({ DASHBOARD }) => ({
-    dashboardStore: DASHBOARD,
+export default connect(({ WITHDRAW }) => ({
+    withdrawStore: WITHDRAW,
 }))(withRouter(ListWithdraw));

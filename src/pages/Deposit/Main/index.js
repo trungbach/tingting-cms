@@ -1,20 +1,18 @@
-import { connect } from 'dva';
 import React from 'react';
 import { router, withRouter } from 'umi';
 import { formatMessage } from 'umi-plugin-react/locale';
-import ListWithdraw from '../ListWithdraw';
+import ListDeposit from '../ListDeposit';
 import TopUp from '../TopUp';
 import styles from './styles.scss';
 
 function Deposit(props) {
-    const { dashboardStore, location } = props;
-    const { dashboardData } = dashboardStore;
+    const { location } = props;
 
     const renderComponent = () => {
         if (location.query.tab === 'topup') {
             return <TopUp />;
         } else if (location.query.tab === 'list-deposit' || location.query.tab === undefined) {
-            return <ListWithdraw />;
+            return <ListDeposit />;
         }
     };
 
@@ -38,11 +36,9 @@ function Deposit(props) {
                     {formatMessage({ id: 'TOPUP' })}
                 </button>
             </div>
-            <div className={styles.content}>{renderComponent()}</div>
+            {renderComponent()}
         </>
     );
 }
 
-export default connect(({ DASHBOARD }) => ({
-    dashboardStore: DASHBOARD,
-}))(withRouter(Deposit));
+export default withRouter(Deposit);

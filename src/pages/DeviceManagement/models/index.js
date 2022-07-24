@@ -1,40 +1,49 @@
-import accountService from '@/services/account';
+import deviceService from '@/services/device';
 import { message } from 'antd';
 import { handleErrorModel } from '@/util/function';
 import { router } from 'umi';
+import depositService from '@/services/deposit';
+
 export default {
-    namespace: 'ACCOUNT',
+    namespace: 'DEVICE',
     state: {
         loading: false,
-        accounts: [],
-        detailAccount: {},
+        devices: [],
         totalRow: 0,
-        deleteResponse: {},
-        activeResponse: {},
-        contract: {},
-        bankAccount: {},
+        paymentTypes: [],
+        updateSuccess: undefined,
+        deleteSuccess: undefined,
+        listPaymentType: [],
     },
     reducers: {
-        getAccountsSuccess(state, action) {
+        getDevicesSuccess(state, action) {
             return {
                 ...state,
-                accounts: action.payload.data,
+                devices: action.payload.body,
                 loading: false,
                 totalRow: action.payload.totalRecord,
             };
         },
 
-        getDetailAccountSuccess(state, action) {
+        getPaymentTypesSuccess(state, action) {
             return {
                 ...state,
-                detailAccount: action.payload.data,
+                paymentTypes: action.payload.body,
             };
         },
 
-        resetCurrentAccountSuccess(state) {
+        updateStatusSuccess(state, action) {
             return {
                 ...state,
-                detailAccount: {},
+                updateSuccess: action.payload.body,
+            };
+        },
+
+        deleteDeviceSuccess(state, action) {
+            return {
+                ...state,
+                deleteSuccess: action.payload,
+                loading: false,
             };
         },
 
@@ -59,54 +68,35 @@ export default {
             };
         },
 
-        deleteAccountSuccess(state, action) {
+        getPaymentTypeSuccess(state, action) {
             return {
                 ...state,
-                loading: false,
-                deleteResponse: action.payload,
-            };
-        },
-
-        restoreAccountSuccess(state, action) {
-            return {
-                ...state,
-                loading: false,
-                deleteResponse: action.payload,
-            };
-        },
-
-        activeUserSuccess(state, action) {
-            return {
-                ...state,
-                loading: false,
-                activeResponse: action.payload,
-            };
-        },
-
-        getContractSuccess(state, action) {
-            return {
-                ...state,
-                loading: false,
-                contract: action.payload,
-            };
-        },
-
-        getBankAccountSuccess(state, action) {
-            return {
-                ...state,
-                loading: false,
-                bankAccount: action.payload,
+                listPaymentType: action.payload.body,
             };
         },
     },
 
     effects: {
-        *getAccounts(action, { call, put }) {
+        *getPaymentType(action, { call, put }) {
+            try {
+                const res = yield call(depositService.getPaymentType, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'getPaymentTypeSuccess', payload: res.body });
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+        *getDevices(action, { call, put }) {
             yield put({ type: 'loading' });
             try {
-                const res = yield call(accountService.getAccounts, action.payload);
+                const res = yield call(deviceService.getDevices, action.payload);
                 if (res.status === 200) {
-                    yield put({ type: 'getAccountsSuccess', payload: res.body });
+                    yield put({ type: 'getDevicesSuccess', payload: res.body });
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });
@@ -117,30 +107,12 @@ export default {
             }
         },
 
-        *getDetailAccount(action, { call, put }) {
-            try {
-                const res = yield call(accountService.getDetailAccount, action.payload);
-                if (res.status === 200) {
-                    yield put({ type: 'getDetailAccountSuccess', payload: res.body });
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
-        },
-        *resetCurrentAccount(action, { call, put }) {
-            yield put({ type: 'resetCurrentAccountSuccess' });
-        },
-
-        *deleteAccount(action, { call, put }) {
+        *deleteDevice(action, { call, put }) {
             yield put({ type: 'loading' });
             try {
-                const res = yield call(accountService.deleteAccount, action.payload);
+                const res = yield call(deviceService.deleteDevice, action.payload);
                 if (res.status === 200) {
-                    yield put({ type: 'deleteAccountSuccess', payload: res.body });
+                    yield put({ type: 'deleteDeviceSuccess', payload: res.body });
                     message.success(res.body.message);
                 } else {
                     message.error(res.body.message);
@@ -152,137 +124,45 @@ export default {
             }
         },
 
-        *createAccount(action, { call, put }) {
+        *updateStatus(action, { call, put }) {
             yield put({ type: 'loading' });
             try {
-                const res = yield call(accountService.createAccount, action.payload);
+                const res = yield call(deviceService.updateStatus, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'updateStatusSuccess', payload: res.body });
+                    message.success(res.body.message);
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+
+        *getPaymentType(action, { call, put }) {
+            try {
+                const res = yield call(deviceService.getPaymentType, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'getPaymentTypesSuccess', payload: res.body });
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+
+        *createCard(action, { call, put }) {
+            try {
+                const res = yield call(deviceService.createCard, action.payload);
                 if (res.status === 200) {
                     yield put({ type: 'success', payload: res.body });
                     message.success(res.body.message);
-                    router.push('/admin/account-manage');
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
-        },
-
-        *updateAccount(action, { call, put }) {
-            yield put({ type: 'loading' });
-            try {
-                const res = yield call(accountService.updateAccount, action.payload.data);
-                if (res.status === 200) {
-                    yield put({ type: 'success', payload: res.body });
-                    message.success(res.body.message);
-                    //   router.push(`/admin/detail-account/${action.payload.userCode}`);
-                    router.push('/admin/account-manage');
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
-        },
-
-        *resetCurrentEdit(action, { call, put }) {
-            yield put({ type: 'resetCurrentEdit' });
-        },
-
-        *restoreAccount(action, { call, put }) {
-            console.log('action', action);
-
-            yield put({ type: 'loading' });
-            try {
-                const res = yield call(accountService.restoreAccount, action.payload);
-                if (res.status === 200) {
-                    yield put({ type: 'restoreAccountSuccess', payload: res.body });
-                    message.success(res.body.message);
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
-        },
-
-        *activeUser(action, { call, put }) {
-            yield put({ type: 'loading' });
-            try {
-                const res = yield call(accountService.activeUser, action.payload);
-                if (res.status === 200) {
-                    yield put({ type: 'activeUserSuccess', payload: res.body });
-                    message.success(res.body.message);
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
-        },
-
-        *unactiveUser(action, { call, put }) {
-            yield put({ type: 'loading' });
-            try {
-                const res = yield call(accountService.unactiveUser, action.payload);
-                if (res.status === 200) {
-                    yield put({ type: 'activeUserSuccess', payload: res.body });
-                    message.success(res.body.message);
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
-        },
-        *uploadContract(action, { call, put }) {
-            yield put({ type: 'loading' });
-            try {
-                const res = yield call(accountService.uploadContract, action.payload);
-                if (res.status === 200) {
-                    yield put({ type: 'uploadContractSuccess', payload: res.body });
-                    message.success(res.body.message);
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
-        },
-        *getContract(action, { call, put }) {
-            yield put({ type: 'loading' });
-            try {
-                const res = yield call(accountService.getContract, action.payload);
-                if (res.status === 200) {
-                    yield put({ type: 'getContractSuccess', payload: res.body.data });
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
-        },
-
-        *getBankAccount(action, { call, put }) {
-            yield put({ type: 'loading' });
-            try {
-                const res = yield call(accountService.getBankAccount, action.payload);
-                if (res.status === 200) {
-                    yield put({ type: 'getBankAccountSuccess', payload: res.body.data });
+                    router.push('/home/device-management');
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });

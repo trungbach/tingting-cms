@@ -1,31 +1,30 @@
 import { useLocation } from 'react-router-dom';
-
+import { TOKEN_KEY, ADMIN_KEY } from '@/config/constant';
 function AdminAuthentication(props) {
     const location = useLocation();
     const { pathname } = location;
     const { history } = props;
 
-    //   // nếu đã đăng nhập mà vào page login hoặc '/' thì chuyển hướng sang màn overview.
-    //   if (
-    //     sessionStorage.getItem("token") &&
-    //     sessionStorage.getItem("Admin") &&
-    //     (pathname === "/" || pathname === "/login")
-    //   ) {
-    //     history.replace("/admin/overview");
-    //     return "";
-    //   }
+    // nếu đã đăng nhập mà vào page login hoặc '/' thì chuyển hướng sang màn overview.
+    if (
+        localStorage.getItem(TOKEN_KEY) &&
+        localStorage.getItem(ADMIN_KEY) &&
+        (pathname === '/' || pathname === '/login')
+    ) {
+        history.replace('/home/transaction');
+        return '';
+    }
 
-    //   // chuyển hướng sang màn login nếu chưa đăng nhập mà truy cập vào các trang yêu cầu đăng nhập.
-    //   // PROTECTED PAGE
-    //   if (
-    //     !sessionStorage.getItem("token") &&
-    //     !(pathname === "/login") &&
-    //     !(pathname === "/forgot-password") &&
-    //     !(pathname === "/change-password")
-    //   ) {
-    //     history.replace("/login");
-    //     return "";
-    //   }
+    // chuyển hướng sang màn login nếu chưa đăng nhập mà truy cập vào các trang yêu cầu đăng nhập.
+    // PROTECTED PAGE
+    if (
+        !localStorage.getItem(TOKEN_KEY) &&
+        !(pathname === '/login') &&
+        !(pathname === '/forgot-password')
+    ) {
+        history.replace('/login');
+        return '';
+    }
 
     return props.children;
 }

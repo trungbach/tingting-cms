@@ -1,92 +1,77 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './styles.scss';
 import { Form, Input, Select } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 import Cleave from 'cleave.js/react';
+import { connect } from 'dva';
+import { RoleName, Role } from '@/config/constant';
 
 const { Option } = Select;
-export default function AdminAddTransDeposit() {
+function AdminAddTransDeposit({ adminStore, dispatch }) {
+    const { listPaymentType, listMerchant } = adminStore;
     const [form] = Form.useForm();
     const [amountDeposit, setAmountDeposit] = React.useState();
 
-    const handleSubmit = values => {};
+    useEffect(() => {
+        dispatch({ type: 'ADMIN/getPaymentType' });
+    }, [dispatch]);
 
-    const handleChange = e => {
-        setAmountDeposit(e.currentTarget.rawValue);
+    useEffect(() => {
+        const payload = {
+            page: 0,
+            role: RoleName[Role.ROLE_USER],
+        };
+        dispatch({ type: 'ADMIN/getMerchants', payload });
+    }, [dispatch]);
+
+    const handleSubmit = values => {
+        const payload = { ...values };
+        payload.totalMoney = amountDeposit;
+        console.log('payload', payload);
     };
 
+    const handleChange = e => {
+        setAmountDeposit(Number(e.currentTarget.rawValue));
+    };
+    const key = 'sortNameBank';
+    const arrayUniqueByBankName = [
+        ...new Map(listPaymentType.map(item => [item[key], item])).values(),
+    ];
     return (
         <div className={styles.topup}>
             <h5 className="mb-3">{formatMessage({ id: 'TOPUP' })}</h5>
             <div className={styles.form}>
                 <Form layout="vertical" form={form} scrollToFirstError onFinish={handleSubmit}>
-                    <div className="col-5">
-                        <Form.Item
-                            name="customer"
-                            label={formatMessage({ id: 'CHOOSE_CUSTOMER' })}
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <div className={styles.select}>
-                                <Select style={{ minWidth: 180 }} defaultValue="">
-                                    <Option value="">{formatMessage({ id: 'CUSTOMER' })}</Option>
-                                    <Option value="23">Chờ xử lý</Option>
-                                    <Option value="234">Đang xử lý</Option>
-                                    <Option value="235">Hoàn thành</Option>
-                                    <Option value="236">Từ chối</Option>
-                                    <Option value="237">Khách hàng hủy giao dịch</Option>
-                                </Select>
-                            </div>{' '}
-                        </Form.Item>
-                    </div>
-                    <div className="col-5">
-                        <Form.Item
-                            name="phone"
-                            label={formatMessage({ id: 'CHOOSE_CHANNEL' })}
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <div className={styles.select}>
-                                <Select style={{ minWidth: 180 }} defaultValue="">
-                                    <Option value="">{formatMessage({ id: 'CUSTOMER' })}</Option>
-                                    <Option value="23">Chờ xử lý</Option>
-                                    <Option value="234">Đang xử lý</Option>
-                                    <Option value="235">Hoàn thành</Option>
-                                    <Option value="236">Từ chối</Option>
-                                    <Option value="237">Khách hàng hủy giao dịch</Option>
-                                </Select>
-                            </div>{' '}
-                        </Form.Item>
-                    </div>
-
                     <div className="row">
                         <div className="col-5">
                             <Form.Item
-                                label={formatMessage({ id: 'ACCOUNT_TYPE' })}
+                                label={formatMessage({ id: 'MERCHANT' })}
                                 name="email"
                                 rules={[{ required: true }]}
                             >
-                                <div className={styles.select}>
-                                    <Select style={{ minWidth: 180 }} defaultValue="">
-                                        <Option value="">
-                                            {formatMessage({ id: 'CUSTOMER' })}
-                                        </Option>
-                                        <Option value="23">Chờ xử lý</Option>
-                                        <Option value="234">Đang xử lý</Option>
-                                        <Option value="235">Hoàn thành</Option>
-                                        <Option value="236">Từ chối</Option>
-                                        <Option value="237">Khách hàng hủy giao dịch</Option>
-                                    </Select>
-                                </div>
+                                <Select style={{ minWidth: 180 }}>
+                                    {listMerchant.map(item => {
+                                        return <Option value={item.id}>{item.phone}</Option>;
+                                    })}
+                                </Select>
                             </Form.Item>
                         </div>
                     </div>
+
+                    <div className="col-5">
+                        <Form.Item
+                            label={formatMessage({ id: 'ACCOUNT_RECEIPT' })}
+                            name="bankId"
+                            rules={[{ required: true }]}
+                        >
+                            <Select style={{ minWidth: 180 }}>
+                                {arrayUniqueByBankName.map((item, index) => {
+                                    return <Option value={item.id}>{item.sortNameBank}</Option>;
+                                })}
+                            </Select>
+                        </Form.Item>
+                    </div>
+
                     <div className="row">
                         <div className="col-5">
                             <Form.Item
@@ -116,3 +101,6 @@ export default function AdminAddTransDeposit() {
         </div>
     );
 }
+export default connect(({ ADMIN }) => ({
+    adminStore: ADMIN,
+}))(AdminAddTransDeposit);

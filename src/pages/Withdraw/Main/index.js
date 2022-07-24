@@ -8,8 +8,7 @@ import AddWithdraw from '../AddWithdraw';
 import styles from './styles.scss';
 
 function Withdraw(props) {
-    const { dashboardStore, location } = props;
-    const { dashboardData } = dashboardStore;
+    const { location } = props;
 
     const renderComponent = () => {
         if (location.query.tab === 'add-withdraw') {

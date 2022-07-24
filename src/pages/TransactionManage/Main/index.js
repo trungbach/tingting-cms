@@ -157,7 +157,7 @@ function TransactionManage(props) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/xlsx',
-                Authorization: 'Bearer ' + sessionStorage.getItem(TOKEN_KEY),
+                Authorization: 'Bearer ' + localStorage.getItem(TOKEN_KEY),
             },
         })
             .then(response => response.blob())

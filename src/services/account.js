@@ -1,39 +1,35 @@
-import request from "./request";
+import request from './request';
 
 export default {
-  getAccounts: (payload) => {
-    return request.get("api/admin/v1/user/get-user", payload);
-  },
-  getDetailAccount: (payload) => {
-    return request.get("api/admin/v1/user/get-detail", payload);
-  },
-  activeUser: (payload) => {
-    return request.post("api/admin/v1/user/approve", payload);
-  },
-  unactiveUser: (payload) => {
-    return request.post("api/admin/v1/user/un-approve", payload);
-  },
-  deleteAccount: (payload) => {
-    return request.post("api/admin/v1/user/delete-user", payload);
-  },
-  createAccount: (payload) => {
-    return request.post("api/admin/v1/auth/add-user", payload);
-  },
-  restoreAccount: (payload) => {
-    return request.post("api/admin/v1/user/restore-user", payload);
-  },
-  updateAccount: (payload) => {
-    return request.post("api/admin/v1/user/edit-user", payload);
-  },
+    getAccounts: payload => {
+        return request.get('api/v1/user/get-user', payload);
+    },
+    getDetailAccount: payload => {
+        return request.get('api/v1/user/detail', payload);
+    },
 
-  uploadContract: (payload) => {
-    return request.post("api/admin/v1/user/upload-contract", payload);
-  },
-  getContract: (payload) => {
-    return request.get("api/admin/v1/user/get-contract", payload);
-  },
+    deleteAccount: payload => {
+        return request.post('api/admin/v1/user/delete-user', payload);
+    },
+    createAccount: payload => {
+        return request.post('api/admin/v1/user/add-user', payload);
+    },
+    restoreAccount: payload => {
+        return request.post('api/admin/v1/user/restore-user', payload);
+    },
+    updateAccount: payload => {
+        return request.post('api/admin/v1/user/edit-user', payload);
+    },
 
-  getBankAccount: (payload) => {
-    return request.get("api/admin/v1/bank/get-bank-account", payload);
-  },
+    configMoney: payload => {
+        return request.post('api/v1/money-config/update', payload);
+    },
+
+    getSercret: payload => {
+        return request.post(`api/v1/secret-key/get?userId=${payload.userId}`);
+    },
+
+    createSecret: payload => {
+        return request.post('api/v1/secret-key/create', payload);
+    },
 };

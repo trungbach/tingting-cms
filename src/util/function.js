@@ -11,10 +11,9 @@ export const handleErrorModel = error => {
     }
 };
 
-export const handleRemoveSession = () => {
-    sessionStorage.removeItem(constants.TOKEN_KEY);
-    sessionStorage.removeItem(constants.ADMIN_KEY);
-    sessionStorage.removeItem(constants.SESSION_AUTH);
+export const handleRemoveLocal = () => {
+    localStorage.removeItem(constants.TOKEN_KEY);
+    localStorage.removeItem(constants.ADMIN_KEY);
 };
 
 //  generate unique id

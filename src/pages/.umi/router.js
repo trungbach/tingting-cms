@@ -41,47 +41,13 @@ const routes = [
     _title_default: 'TingTing',
   },
   {
-    path: '/forgot-password',
-    component: __IS_BROWSER
-      ? _dvaDynamic({
-          app: require('@tmp/dva').getApp(),
-          models: () => [
-            import(/* webpackChunkName: 'p__ForgotPassword__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/ForgotPassword/models/index.js').then(
-              m => {
-                return { namespace: 'index', ...m.default };
-              },
-            ),
-          ],
-          component: () =>
-            import(/* webpackChunkName: "p__ForgotPassword" */ '../ForgotPassword'),
-        })
-      : require('../ForgotPassword').default,
-    Routes: [require('../../components/AdminAuthentication').default],
-    exact: true,
-    _title: 'TingTing',
-    _title_default: 'TingTing',
-  },
-  {
-    path: '/change-password',
+    path: '/payment',
     component: __IS_BROWSER
       ? _dvaDynamic({
           component: () =>
-            import(/* webpackChunkName: "p__ChangePassword" */ '../ChangePassword'),
+            import(/* webpackChunkName: "p__Payment" */ '../Payment'),
         })
-      : require('../ChangePassword').default,
-    Routes: [require('../../components/AdminAuthentication').default],
-    exact: true,
-    _title: 'TingTing',
-    _title_default: 'TingTing',
-  },
-  {
-    path: '/change-first-password',
-    component: __IS_BROWSER
-      ? _dvaDynamic({
-          component: () =>
-            import(/* webpackChunkName: "p__Login__ChangePasswordInit" */ '../Login/ChangePasswordInit'),
-        })
-      : require('../Login/ChangePasswordInit').default,
+      : require('../Payment').default,
     Routes: [require('../../components/AdminAuthentication').default],
     exact: true,
     _title: 'TingTing',
@@ -202,6 +168,27 @@ const routes = [
         _title_default: 'TingTing',
       },
       {
+        path: '/home/update-device/:id',
+        component: __IS_BROWSER
+          ? _dvaDynamic({
+              app: require('@tmp/dva').getApp(),
+              models: () => [
+                import(/* webpackChunkName: 'p__DeviceManagement__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/DeviceManagement/models/index.js').then(
+                  m => {
+                    return { namespace: 'index', ...m.default };
+                  },
+                ),
+              ],
+              component: () =>
+                import(/* webpackChunkName: "p__DeviceManagement__Edit" */ '../DeviceManagement/Edit'),
+            })
+          : require('../DeviceManagement/Edit').default,
+        Routes: [require('../../components/AdminAuthentication').default],
+        exact: true,
+        _title: 'TingTing',
+        _title_default: 'TingTing',
+      },
+      {
         path: '/home/tranfer-balance',
         component: __IS_BROWSER
           ? _dvaDynamic({
@@ -244,148 +231,7 @@ const routes = [
         _title_default: 'TingTing',
       },
       {
-        component: () =>
-          React.createElement(
-            require('/Users/macair/TrungBach/TingTingPayCMS/node_modules/umi-build-dev/lib/plugins/404/NotFound.js')
-              .default,
-            { pagesPath: 'src/pages', hasRoutesInConfig: true },
-          ),
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-    ],
-    _title: 'TingTing',
-    _title_default: 'TingTing',
-  },
-  {
-    path: '/admin',
-    component: __IS_BROWSER
-      ? _dvaDynamic({
-          component: () =>
-            import(/* webpackChunkName: "Wrappers" */ '../../Wrappers'),
-        })
-      : require('../../Wrappers').default,
-    routes: [
-      {
-        path: '/admin',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__Overview__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/Overview/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__Overview" */ '../Overview'),
-            })
-          : require('../Overview').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-      {
-        path: '/admin/overview',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__Overview__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/Overview/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__Overview" */ '../Overview'),
-            })
-          : require('../Overview').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-      {
-        path: '/admin/my-account',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              component: () =>
-                import(/* webpackChunkName: "p__MyAccount" */ '../MyAccount'),
-            })
-          : require('../MyAccount').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-      {
-        path: '/admin/transaction-manage',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__TransactionManage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/TransactionManage/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__TransactionManage" */ '../TransactionManage'),
-            })
-          : require('../TransactionManage').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-      {
-        path: '/admin/detail-transaction/:transactionCode',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__TransactionManage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/TransactionManage/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__TransactionManage__Detail" */ '../TransactionManage/Detail'),
-            })
-          : require('../TransactionManage/Detail').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-      {
-        path: '/admin/account-manage',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__AccountManage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/AccountManage/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__AccountManage" */ '../AccountManage'),
-            })
-          : require('../AccountManage').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-      {
-        path: '/admin/create-account',
+        path: '/home/create-account',
         component: __IS_BROWSER
           ? _dvaDynamic({
               app: require('@tmp/dva').getApp(),
@@ -406,189 +252,42 @@ const routes = [
         _title_default: 'TingTing',
       },
       {
-        path: '/admin/edit-account/:userCode',
+        path: '/home/create-card',
         component: __IS_BROWSER
           ? _dvaDynamic({
               app: require('@tmp/dva').getApp(),
               models: () => [
-                import(/* webpackChunkName: 'p__AccountManage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/AccountManage/models/index.js').then(
+                import(/* webpackChunkName: 'p__DeviceManagement__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/DeviceManagement/models/index.js').then(
                   m => {
                     return { namespace: 'index', ...m.default };
                   },
                 ),
               ],
               component: () =>
-                import(/* webpackChunkName: "p__AccountManage__Edit" */ '../AccountManage/Edit'),
+                import(/* webpackChunkName: "p__DeviceManagement__Create" */ '../DeviceManagement/Create'),
             })
-          : require('../AccountManage/Edit').default,
+          : require('../DeviceManagement/Create').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
         _title: 'TingTing',
         _title_default: 'TingTing',
       },
       {
-        path: '/admin/detail-account/:userCode',
+        path: '/home/ip-address',
         component: __IS_BROWSER
           ? _dvaDynamic({
               app: require('@tmp/dva').getApp(),
               models: () => [
-                import(/* webpackChunkName: 'p__AccountManage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/AccountManage/models/index.js').then(
+                import(/* webpackChunkName: 'p__IPAddress__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/IPAddress/models/index.js').then(
                   m => {
                     return { namespace: 'index', ...m.default };
                   },
                 ),
               ],
               component: () =>
-                import(/* webpackChunkName: "p__AccountManage__Detail" */ '../AccountManage/Detail'),
+                import(/* webpackChunkName: "p__IPAddress" */ '../IPAddress'),
             })
-          : require('../AccountManage/Detail').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-      {
-        path: '/admin/contract-account/:userCode',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__AccountManage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/AccountManage/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__AccountManage__Contract" */ '../AccountManage/Contract'),
-            })
-          : require('../AccountManage/Contract').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-      {
-        path: '/admin/bank-account/:userCode',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__AccountManage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/AccountManage/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__AccountManage__Bank" */ '../AccountManage/Bank'),
-            })
-          : require('../AccountManage/Bank').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-      {
-        path: '/admin/company-manage',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__CompanyManage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/CompanyManage/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__CompanyManage" */ '../CompanyManage'),
-            })
-          : require('../CompanyManage').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-      {
-        path: '/admin/create-company',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__CompanyManage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/CompanyManage/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__CompanyManage__Create" */ '../CompanyManage/Create'),
-            })
-          : require('../CompanyManage/Create').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-      {
-        path: '/admin/detail-company/:companyCode',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__CompanyManage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/CompanyManage/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__CompanyManage__Detail" */ '../CompanyManage/Detail'),
-            })
-          : require('../CompanyManage/Detail').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-      {
-        path: '/admin/update-company/:companyCode',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__CompanyManage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/CompanyManage/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__CompanyManage__Edit" */ '../CompanyManage/Edit'),
-            })
-          : require('../CompanyManage/Edit').default,
-        Routes: [require('../../components/AdminAuthentication').default],
-        exact: true,
-        _title: 'TingTing',
-        _title_default: 'TingTing',
-      },
-      {
-        path: '/admin/borrow-manage',
-        component: __IS_BROWSER
-          ? _dvaDynamic({
-              app: require('@tmp/dva').getApp(),
-              models: () => [
-                import(/* webpackChunkName: 'p__BorrowManage__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/BorrowManage/models/index.js').then(
-                  m => {
-                    return { namespace: 'index', ...m.default };
-                  },
-                ),
-              ],
-              component: () =>
-                import(/* webpackChunkName: "p__BorrowManage" */ '../BorrowManage'),
-            })
-          : require('../BorrowManage').default,
+          : require('../IPAddress').default,
         Routes: [require('../../components/AdminAuthentication').default],
         exact: true,
         _title: 'TingTing',

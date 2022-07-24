@@ -1,12 +1,13 @@
 import { message } from 'antd';
 import { handleErrorModel } from '@/util/function';
-import overviewService from '@/services/overview';
+import depositService from '@/services/deposit';
+import accountService from '@/services/account';
 export default {
-    namespace: 'DASHBOARD',
+    namespace: 'ADMIN',
     state: {
         loading: false,
-        dashboardData: {},
-        transactionResponse: [],
+        listPaymentType: [],
+        listMerchant: [],
     },
     reducers: {
         loading(state, action) {
@@ -23,32 +24,27 @@ export default {
             };
         },
 
-        getDashboardSuccess(state, action) {
+        getPaymentTypeSuccess(state, action) {
             return {
                 ...state,
-                loading: false,
-                dashboardData: action.payload,
+                listPaymentType: action.payload.body,
             };
         },
-        getTransactionChartSuccess(state, action) {
+
+        getMerchantSuccess(state, action) {
             return {
                 ...state,
-                loading: false,
-                transactionResponse: action.payload,
+                listMerchant: action.payload.body,
             };
         },
     },
 
     effects: {
-        *getDashboard(action, { call, put }) {
-            yield put({ type: 'loading' });
+        *getPaymentType(action, { call, put }) {
             try {
-                const res = yield call(overviewService.getDashboard, action.payload);
+                const res = yield call(depositService.getPaymentType, action.payload);
                 if (res.status === 200) {
-                    yield put({
-                        type: 'getDashboardSuccess',
-                        payload: res.body.data,
-                    });
+                    yield put({ type: 'getPaymentTypeSuccess', payload: res.body });
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });
@@ -58,14 +54,12 @@ export default {
                 yield put({ type: 'error' });
             }
         },
-        *getTransactionChart(action, { call, put }) {
+
+        *getMerchants(action, { call, put }) {
             try {
-                const res = yield call(overviewService.getTransactionChart, action.payload);
+                const res = yield call(accountService.getAccounts, action.payload);
                 if (res.status === 200) {
-                    yield put({
-                        type: 'getTransactionChartSuccess',
-                        payload: res.body.data,
-                    });
+                    yield put({ type: 'getMerchantSuccess', payload: res.body });
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });

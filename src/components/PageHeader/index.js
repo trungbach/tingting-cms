@@ -1,22 +1,20 @@
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useEffect, useState } from 'react';
-import { Menu, Layout } from 'antd';
-import { connect } from 'dva';
-import { withRouter, Link } from 'umi';
-import ic_overview from '@/assets/image/ic_overview.svg';
-import ic_transaction from '@/assets/image/ic_transaction.svg';
-import ic_account from '@/assets/image/ic_account.svg';
 import ic_business from '@/assets/image/ic_business.svg';
-import ic_borrow from '@/assets/image/ic_borrow.png';
-import ic_logo from '@/assets/image/ic_logo.png';
-import ic_setting from '@/assets/image/ic_setting.svg';
-import ic_deposit from '@/assets/image/ic_deposit.svg';
-import ic_withdraw from '@/assets/image/ic_withdraw.svg';
 import ic_card from '@/assets/image/ic_card.svg';
+import ic_deposit from '@/assets/image/ic_deposit.svg';
+import ic_setting from '@/assets/image/ic_setting.svg';
+import ic_transaction from '@/assets/image/ic_transaction.svg';
+import ic_withdraw from '@/assets/image/ic_withdraw.svg';
+import logo_tingting from '@/assets/image/logo_tingting.jpg';
+import { ADMIN_KEY } from '@/config/constant';
+import { useLocalStorage } from '@/hooks';
+import { Layout, Menu } from 'antd';
+import { connect } from 'dva';
+import React, { useEffect, useState } from 'react';
+import { Link, withRouter } from 'umi';
+import { formatMessage } from 'umi-plugin-react/locale';
+import { Role } from '../../config/constant';
 import styles from './styles.scss';
-import { ROLE_ADMIN_SYSTEM, ROLE_ADMIN_COMPANY, ADMIN_KEY } from '@/config/constant';
-import { useSessionStorage } from '@/hooks';
-import { getLocale, formatMessage } from 'umi-plugin-react/locale';
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -25,10 +23,10 @@ function PageHeader(props) {
     const [collapsed, setCollapsed] = useState(false);
     const [page, setPage] = useState(location.pathname);
 
-    const [admin] = useSessionStorage(ADMIN_KEY);
+    const [admin] = useLocalStorage(ADMIN_KEY);
     const { companies } = masterDataStore;
 
-    const adminMenu = [
+    let listMenu = [
         {
             page: 'transaction',
             icon: <img src={ic_transaction} />,
@@ -47,27 +45,30 @@ function PageHeader(props) {
             url: '/home/withdraw',
             text: formatMessage({ id: 'WITHDRAW' }),
         },
-        {
-            page: 'account-manage',
-            icon: <img src={ic_business} />,
-            url: '/home/account-manage',
-            text: formatMessage({ id: 'ACCOUNT_MANAGEMENT' }),
-        },
-        {
-            page: 'admin',
-            icon: <img src={ic_business} />,
-            url: '/home/admin',
-            text: formatMessage({ id: 'ADMIN' }),
-        },
     ];
-
-    if (admin?.role === ROLE_ADMIN_COMPANY) {
-        adminMenu.push({
-            page: 'borrowing',
-            icon: <img src={ic_borrow} />,
-            url: '/admin/borrow-manage',
-            text: 'Quản lý dư nợ nhân viên',
-        });
+    console.log('admin', admin);
+    if (admin?.role === Role.ROLE_ADMIN) {
+        const adminMenu = [
+            {
+                page: 'account-manage',
+                icon: <img src={ic_business} />,
+                url: '/home/account-manage',
+                text: formatMessage({ id: 'ACCOUNT_MANAGEMENT' }),
+            },
+            {
+                page: 'admin',
+                icon: <img src={ic_business} />,
+                url: '/home/admin',
+                text: formatMessage({ id: 'ADMIN' }),
+            },
+            {
+                page: 'ip',
+                icon: <img src={ic_business} />,
+                url: '/home/ip-address',
+                text: formatMessage({ id: 'IP_ADDRESS_LIMIT' }),
+            },
+        ];
+        listMenu = [...listMenu, ...adminMenu];
     }
 
     useEffect(() => {
@@ -78,7 +79,7 @@ function PageHeader(props) {
         setCollapsed(collapsed);
     };
 
-    const renderListMenu = adminMenu.map((menu, index) => {
+    const renderListMenu = listMenu.map((menu, index) => {
         return (
             <Menu.Item
                 key={menu.url}
@@ -112,36 +113,38 @@ function PageHeader(props) {
                 mode="inline"
             >
                 <div className={styles.logoMenu}>
-                    <img style={{ width: collapsed ? 100 : 145 }} src={ic_logo} alt="logo" />
+                    <img style={{ width: collapsed ? 100 : 145 }} src={logo_tingting} alt="logo" />
                 </div>
                 <Menu theme="dark" mode="inline">
                     {renderListMenu}
-                    <SubMenu
-                        key="sub4"
-                        title={
-                            <span>
-                                <img src={ic_card} alt="" />
-                                <span style={{ marginLeft: '10px' }}>
-                                    {formatMessage({ id: 'CARD' })}
+                    {admin?.role === Role.ROLE_ADMIN && (
+                        <SubMenu
+                            key="sub4"
+                            title={
+                                <span>
+                                    <img src={ic_card} alt="" />
+                                    <span style={{ marginLeft: '10px' }}>
+                                        {formatMessage({ id: 'CARD' })}
+                                    </span>
                                 </span>
-                            </span>
-                        }
-                    >
-                        <Menu.Item key="9" icon={<img src={ic_setting} />}>
-                            <Link to="/home/device-management">
-                                <span className={styles.menuText}>
-                                    {formatMessage({ id: 'DEVICE_MANAGEMENT' })}
-                                </span>
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item key="10" icon={<img src={ic_transaction} />}>
-                            <Link to="/home/tranfer-balance">
-                                <span className={styles.menuText}>
-                                    {formatMessage({ id: 'TRANFER_BALANCE' })}
-                                </span>
-                            </Link>
-                        </Menu.Item>
-                    </SubMenu>
+                            }
+                        >
+                            <Menu.Item key="9" icon={<img src={ic_setting} />}>
+                                <Link to="/home/device-management">
+                                    <span className={styles.menuText}>
+                                        {formatMessage({ id: 'DEVICE_MANAGEMENT' })}
+                                    </span>
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item key="10" icon={<img src={ic_transaction} />}>
+                                <Link to="/home/tranfer-balance">
+                                    <span className={styles.menuText}>
+                                        {formatMessage({ id: 'TRANFER_BALANCE' })}
+                                    </span>
+                                </Link>
+                            </Menu.Item>
+                        </SubMenu>
+                    )}
                 </Menu>
             </Sider>
         </div>

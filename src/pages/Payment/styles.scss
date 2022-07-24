@@ -1,0 +1,36 @@
+@import "@/base.scss";
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 100px 0;
+    height: 100%;
+
+    h3 {
+        color: #000 !important;
+
+    }
+
+    input {
+        width: 400px;
+        text-indent: 6px;
+    }
+
+    .chooseBank {
+        margin-top: 50px;
+
+        .banks {
+            .bank {
+                cursor: pointer;
+                border: 2px solid transparent;
+                width: fit-content;
+                margin-bottom: 20px;
+
+                &:hover {
+                    border: 2px solid #ccc;
+                }
+            }
+        }
+    }
+
+}

@@ -41,7 +41,7 @@ h1,h2,h3,h4,h5,h6 {
 
 * {
   font-family: "Inter";
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 300;
   font-style: normal;
   color: #DFE0E3;
@@ -269,4 +269,8 @@ input {
 }
 .ant-message span {
     color: var(--dark-color)
+}
+
+.ant-modal-confirm-btns .ant-btn-default > span {
+  color:  #3b1818;
 }

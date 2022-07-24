@@ -20,6 +20,7 @@ const InjectedWrapper = (() => {
 })();
 
 import 'moment/locale/vi';
+import 'moment/locale/zh-cn';
 
 const baseNavigator = true;
 const baseSeparator = '-';
@@ -48,6 +49,15 @@ const localeInfo = {
     antd: require('antd/es/locale-provider/vi_VN'),
     data: require('react-intl/locale-data/vi'),
     momentLocale: 'vi',
+  },
+  'zh-CN': {
+    messages: {
+      ...((locale) => locale.__esModule ? locale.default : locale)(require('/Users/macair/TrungBach/TingTingPayCMS/src/locales/zh-CN.js')),
+    },
+    locale: 'zh-CN',
+    antd: require('antd/es/locale-provider/zh_CN'),
+    data: require('react-intl/locale-data/zh'),
+    momentLocale: 'zh-cn',
   },
 };
 

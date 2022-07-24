@@ -7,18 +7,17 @@ export default {
     state: {
         loading: false,
         accounts: [],
-        detailAccount: {},
+        detailAccount: undefined,
         totalRow: 0,
         deleteResponse: {},
-        activeResponse: {},
-        contract: {},
-        bankAccount: {},
+        updateResponse: {},
+        listSecret: [],
     },
     reducers: {
         getAccountsSuccess(state, action) {
             return {
                 ...state,
-                accounts: action.payload.data,
+                accounts: action.payload.body,
                 loading: false,
                 totalRow: action.payload.totalRecord,
             };
@@ -27,7 +26,7 @@ export default {
         getDetailAccountSuccess(state, action) {
             return {
                 ...state,
-                detailAccount: action.payload.data,
+                detailAccount: action.payload.body,
             };
         },
 
@@ -67,35 +66,18 @@ export default {
             };
         },
 
-        restoreAccountSuccess(state, action) {
+        updateSuccess(state, action) {
             return {
                 ...state,
                 loading: false,
-                deleteResponse: action.payload,
+                updateResponse: action.payload,
             };
         },
 
-        activeUserSuccess(state, action) {
+        getSercretSuccess(state, action) {
             return {
                 ...state,
-                loading: false,
-                activeResponse: action.payload,
-            };
-        },
-
-        getContractSuccess(state, action) {
-            return {
-                ...state,
-                loading: false,
-                contract: action.payload,
-            };
-        },
-
-        getBankAccountSuccess(state, action) {
-            return {
-                ...state,
-                loading: false,
-                bankAccount: action.payload,
+                listSecret: action.payload,
             };
         },
     },
@@ -107,6 +89,36 @@ export default {
                 const res = yield call(accountService.getAccounts, action.payload);
                 if (res.status === 200) {
                     yield put({ type: 'getAccountsSuccess', payload: res.body });
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+
+        *getSercret(action, { call, put }) {
+            try {
+                const res = yield call(accountService.getSercret, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'getSercretSuccess', payload: res.body.body });
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+
+        *createSecret(action, { call, put }) {
+            try {
+                const res = yield call(accountService.createSecret, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'success', payload: res.body });
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });
@@ -153,13 +165,21 @@ export default {
         },
 
         *createAccount(action, { call, put }) {
-            yield put({ type: 'loading' });
             try {
                 const res = yield call(accountService.createAccount, action.payload);
                 if (res.status === 200) {
-                    yield put({ type: 'success', payload: res.body });
-                    message.success(res.body.message);
-                    router.push('/admin/account-manage');
+                    const payload = {
+                        ownerId: res.body.body.id,
+                    };
+                    const resSecret = yield call(accountService.createSecret, payload);
+                    if (resSecret.status === 200) {
+                        yield put({ type: 'success', payload: res.body });
+                        message.success(res.body.message);
+                        router.push('/home/account-manage');
+                    } else {
+                        message.error(res.body.message);
+                        yield put({ type: 'error' });
+                    }
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });
@@ -177,8 +197,23 @@ export default {
                 if (res.status === 200) {
                     yield put({ type: 'success', payload: res.body });
                     message.success(res.body.message);
-                    //   router.push(`/admin/detail-account/${action.payload.userCode}`);
-                    router.push('/admin/account-manage');
+                    router.push('/home/account-manage');
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+        *configMoney(action, { call, put }) {
+            yield put({ type: 'loading' });
+            try {
+                const res = yield call(accountService.configMoney, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'updateSuccess', payload: res.body });
+                    message.success(res.body.message);
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });
@@ -191,106 +226,6 @@ export default {
 
         *resetCurrentEdit(action, { call, put }) {
             yield put({ type: 'resetCurrentEdit' });
-        },
-
-        *restoreAccount(action, { call, put }) {
-            console.log('action', action);
-
-            yield put({ type: 'loading' });
-            try {
-                const res = yield call(accountService.restoreAccount, action.payload);
-                if (res.status === 200) {
-                    yield put({ type: 'restoreAccountSuccess', payload: res.body });
-                    message.success(res.body.message);
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
-        },
-
-        *activeUser(action, { call, put }) {
-            yield put({ type: 'loading' });
-            try {
-                const res = yield call(accountService.activeUser, action.payload);
-                if (res.status === 200) {
-                    yield put({ type: 'activeUserSuccess', payload: res.body });
-                    message.success(res.body.message);
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
-        },
-
-        *unactiveUser(action, { call, put }) {
-            yield put({ type: 'loading' });
-            try {
-                const res = yield call(accountService.unactiveUser, action.payload);
-                if (res.status === 200) {
-                    yield put({ type: 'activeUserSuccess', payload: res.body });
-                    message.success(res.body.message);
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
-        },
-        *uploadContract(action, { call, put }) {
-            yield put({ type: 'loading' });
-            try {
-                const res = yield call(accountService.uploadContract, action.payload);
-                if (res.status === 200) {
-                    yield put({ type: 'uploadContractSuccess', payload: res.body });
-                    message.success(res.body.message);
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
-        },
-        *getContract(action, { call, put }) {
-            yield put({ type: 'loading' });
-            try {
-                const res = yield call(accountService.getContract, action.payload);
-                if (res.status === 200) {
-                    yield put({ type: 'getContractSuccess', payload: res.body.data });
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
-        },
-
-        *getBankAccount(action, { call, put }) {
-            yield put({ type: 'loading' });
-            try {
-                const res = yield call(accountService.getBankAccount, action.payload);
-                if (res.status === 200) {
-                    yield put({ type: 'getBankAccountSuccess', payload: res.body.data });
-                } else {
-                    message.error(res.body.message);
-                    yield put({ type: 'error' });
-                }
-            } catch (error) {
-                handleErrorModel(error);
-                yield put({ type: 'error' });
-            }
         },
     },
 };

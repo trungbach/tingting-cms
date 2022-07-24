@@ -1,18 +1,18 @@
 import superagent from 'superagent';
 import config from '@/config';
 import { router } from 'umi';
-import { handleRemoveSession } from '@/util/function';
+import { handleRemoveLocal } from '@/util/function';
 export default {
     get: (url, data = {}) =>
         superagent
             .get(config.API_DOMAIN + url)
             .query(data)
-            .set('Authorization', 'Bearer ' + sessionStorage.getItem('token'))
+            .set('Authorization', 'Bearer ' + localStorage.getItem('token'))
             .set('Accept', 'application/json')
             .use(req =>
                 req.on('error', err => {
                     if (err.status === 401) {
-                        handleRemoveSession();
+                        handleRemoveLocal();
                         router.push({ pathname: '/login' });
                     }
                 }),
@@ -22,12 +22,12 @@ export default {
         superagent
             .post(config.API_DOMAIN + url)
             .send(data)
-            .set('Authorization', 'Bearer ' + sessionStorage.getItem('token'))
+            .set('Authorization', 'Bearer ' + localStorage.getItem('token'))
             .set('Accept', 'application/json, multipart/form-data')
             .use(req =>
                 req.on('error', err => {
                     if (err.status === 401 && url !== '/login') {
-                        handleRemoveSession();
+                        handleRemoveLocal();
                         router.push({ pathname: '/login' });
                     }
                 }),
@@ -37,12 +37,12 @@ export default {
         superagent
             .put(config.API_DOMAIN + url)
             .send(data)
-            .set('Authorization', 'Bearer ' + sessionStorage.getItem('token'))
+            .set('Authorization', 'Bearer ' + localStorage.getItem('token'))
             .set('Accept', 'application/json, multipart/form-data')
             .use(req =>
                 req.on('error', err => {
                     if (err.status === 401) {
-                        handleRemoveSession();
+                        handleRemoveLocal();
                         router.push({ pathname: '/login' });
                     }
                 }),
@@ -52,12 +52,12 @@ export default {
         superagent
             .delete(config.API_DOMAIN + url)
             .send(data)
-            .set('Authorization', 'Bearer ' + sessionStorage.getItem('token'))
+            .set('Authorization', 'Bearer ' + localStorage.getItem('token'))
             .set('Accept', 'application/json')
             .use(req =>
                 req.on('error', err => {
                     if (err.status === 401) {
-                        handleRemoveSession();
+                        handleRemoveLocal();
                         router.push({ pathname: '/login' });
                     }
                 }),
@@ -67,7 +67,7 @@ export default {
         superagent
             .get(config.API_DOMAIN + url)
             .query(data)
-            .set('Authorization', 'Bearer ' + sessionStorage.getItem('token'))
+            .set('Authorization', 'Bearer ' + localStorage.getItem('token'))
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/pdf')
             .set('Content-Disposition', 'attachment; filename="qr.pdf"')
@@ -75,7 +75,7 @@ export default {
             .use(req =>
                 req.on('error', err => {
                     if (err.status === 401) {
-                        handleRemoveSession();
+                        handleRemoveLocal();
                         router.push({ pathname: '/login' });
                     }
                 }),
