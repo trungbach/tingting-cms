@@ -5,7 +5,7 @@ import { connect } from 'dva';
 import React, { useEffect, useState } from 'react';
 import { formatMessage } from 'umi-plugin-react/locale';
 import styles from './styles.scss';
-
+import { PaymentTypeValue } from '@/config/constant';
 const { Option } = Select;
 const formItemLayout = {
     labelCol: {
@@ -57,6 +57,8 @@ function CreateCard(props) {
         ).values(),
     ];
 
+    console.log('paymentTypes', paymentTypes);
+
     return (
         <div className={styles.content}>
             <PageTitle
@@ -107,6 +109,12 @@ function CreateCard(props) {
                                 return (
                                     <Option value={item.id}>
                                         {formatMessage({ id: `${item.fullNameBank}` })}
+                                        {' - '}
+                                        <span>
+                                            {formatMessage({
+                                                id: PaymentTypeValue[item.type],
+                                            })}
+                                        </span>
                                     </Option>
                                 );
                             })}

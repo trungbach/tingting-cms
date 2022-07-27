@@ -26,7 +26,8 @@ export default {
             };
         },
 
-        getPaymentTypesSuccess(state, action) {
+        getPaymentTypeSuccess(state, action) {
+            console.log('action', action);
             return {
                 ...state,
                 paymentTypes: action.payload.body,
@@ -69,12 +70,6 @@ export default {
             };
         },
 
-        getPaymentTypeSuccess(state, action) {
-            return {
-                ...state,
-                listPaymentType: action.payload.body,
-            };
-        },
         getDetailDeviceSuccess(state, action) {
             return {
                 ...state,
