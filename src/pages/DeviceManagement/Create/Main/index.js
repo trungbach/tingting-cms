@@ -50,12 +50,12 @@ function CreateCard(props) {
         dispatch({ type: 'DEVICE/createCard', payload: values });
     };
 
-    const key = 'sortNameBank';
-    const arrayUniqueByBankName = [
-        ...new Map(
-            paymentTypes.filter(i => i.sortNameBank !== 'USDT').map(item => [item[key], item]),
-        ).values(),
-    ];
+    // const key = 'sortNameBank';
+    // const arrayUniqueByBankName = [
+    //     ...new Map(
+    //         paymentTypes.filter(i => i.sortNameBank !== 'USDT').map(item => [item[key], item]),
+    //     ).values(),
+    // ];
 
     console.log('paymentTypes', paymentTypes);
 
@@ -105,19 +105,21 @@ function CreateCard(props) {
                         name="paymentTypeId"
                     >
                         <Select style={{ minWidth: 180 }} defaultValue="">
-                            {arrayUniqueByBankName.map((item, index) => {
-                                return (
-                                    <Option value={item.id}>
-                                        {formatMessage({ id: `${item.fullNameBank}` })}
-                                        {' - '}
-                                        <span>
-                                            {formatMessage({
-                                                id: PaymentTypeValue[item.type],
-                                            })}
-                                        </span>
-                                    </Option>
-                                );
-                            })}
+                            {paymentTypes
+                                .filter(i => i.sortNameBank !== 'USDT')
+                                .map((item, index) => {
+                                    return (
+                                        <Option value={item.id}>
+                                            {formatMessage({ id: `${item.fullNameBank}` })}
+                                            {' - '}
+                                            <span>
+                                                {formatMessage({
+                                                    id: PaymentTypeValue[item.type],
+                                                })}
+                                            </span>
+                                        </Option>
+                                    );
+                                })}
                         </Select>
                     </Form.Item>
 
