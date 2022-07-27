@@ -2,35 +2,37 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, Input } from 'antd';
 import { connect } from 'dva';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, router } from 'umi';
 import { formatMessage, setLocale } from 'umi-plugin-react/locale';
 import styles from './styles.scss';
-
-function generateOtp(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+import ModalOtp from './ModalOtp';
+import ModalLoading from '@/components/ModalLoading';
 
 function Login({ dispatch, masterDataStore }) {
-    let { isLogin } = masterDataStore;
+    let { isLogin, mailResponse, loginLoading } = masterDataStore;
+    const [showOtp, setShowOtp] = useState(false);
     setLocale('en-US');
 
-    // tao ma otp 6 so luu vao storage
     useEffect(() => {
-        const otp = generateOtp(1e5, 999999);
-        localStorage.setItem('otp', otp);
-    }, []);
+        if (mailResponse) {
+            setShowOtp(true);
+        }
+    }, [mailResponse]);
 
     // chuyen vao man dashboard neu da dang nhap
     useEffect(() => {
         if (isLogin) {
-            router.push('/home/transaction');
+            setShowOtp(false);
+            dispatch({
+                type: 'MASTERDATA/resetMail',
+            });
+            router.push('/home/deposit');
         }
     }, [isLogin]);
     const [form] = Form.useForm();
 
     const onSubmit = values => {
-        // const otp = localStorage.getItem('otp');
         values.username = values['username'].trim();
         values.password = values['password'].trim();
         dispatch({
@@ -50,6 +52,8 @@ function Login({ dispatch, masterDataStore }) {
 
     return (
         <div className={styles.login}>
+            {loginLoading && <ModalLoading />}
+            {showOtp && <ModalOtp showOtp={showOtp} setShowOtp={setShowOtp} />}
             <div className={styles.loginForm}>
                 <div className={styles.form}>
                     <div className={styles.formTitle}>

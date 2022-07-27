@@ -1,7 +1,8 @@
 import authService from '@/services/auth';
 import masterService from '@/services/masterData';
+import accountService from '@/services/account';
 import { message } from 'antd';
-import { handleRemoveLocal, handleErrorModel } from '@/util/function';
+import { handleRemoveLocal, handleErrorModel, generateOtp } from '@/util/function';
 import { router } from 'umi';
 import _ from 'lodash';
 import { TOKEN_KEY, ADMIN_KEY } from '@/config/constant';
@@ -12,16 +13,13 @@ export default {
     state: {
         loading: false,
         loginLoading: false,
-        companies: [],
-        companyId: undefined,
-        companyCode: undefined,
         isLogin: false,
-        isFirstLogin: false,
-        initPass: undefined,
         changePasswordSuccess: false,
         myProfile: {},
-        hideSelectCompanies: false,
         updateProfileResponse: {},
+        mailResponse: undefined,
+        loginResponse: {},
+        detailAccount: {},
     },
 
     reducers: {
@@ -55,14 +53,13 @@ export default {
         },
 
         loginSuccess(state, action) {
-            console.log('action', action);
-            const { accessToken } = action.payload.body;
+            console.log('state.mailResponse', state.mailResponse);
+            const { accessToken } = state.mailResponse;
             localStorage.setItem(TOKEN_KEY, accessToken);
-            localStorage.setItem(ADMIN_KEY, JSON.stringify(action.payload.body));
+            localStorage.setItem(ADMIN_KEY, JSON.stringify(state.mailResponse));
             message.success(formatMessage({ id: 'LOGIN_SUCCESS' }));
             return {
                 ...state,
-                loginLoading: false,
                 isLogin: true,
             };
         },
@@ -73,31 +70,6 @@ export default {
                 loginLoading: false,
             };
         },
-
-        getListCompaniesSuccess(state, action) {
-            if (state.companyId && state.companyCode) {
-                return {
-                    ...state,
-                    companies: action.payload,
-                };
-            } else {
-            }
-        },
-
-        updateCompanySuccess(state, action) {
-            return {
-                ...state,
-                companyId: action.payload.id,
-            };
-        },
-
-        hideSelectCompaniesSuccess(state, action) {
-            return {
-                ...state,
-                hideSelectCompanies: action.payload,
-            };
-        },
-
         logoutSuccess(state, action) {
             handleRemoveLocal();
             return {
@@ -119,6 +91,28 @@ export default {
                 ...state,
                 updateProfileResponse: action.payload,
                 loading: false,
+            };
+        },
+
+        sendMailSuccess(state, action) {
+            return {
+                ...state,
+                loginLoading: false,
+                mailResponse: action.payload.body,
+            };
+        },
+
+        getDetailAccountSuccess(state, action) {
+            return {
+                ...state,
+                detailAccount: action.payload.body,
+            };
+        },
+
+        resetMailSuccess(state, action) {
+            return {
+                ...state,
+                mailResponse: undefined,
             };
         },
     },
@@ -145,7 +139,17 @@ export default {
             try {
                 const res = yield call(authService.login, action.payload);
                 if (res.status === 200) {
-                    yield put({ type: 'loginSuccess', payload: res.body });
+                    const otp = generateOtp(1e5, 999999);
+                    localStorage.setItem('code_tt', otp);
+                    const mailPayload = {
+                        code: otp,
+                        phone: action.payload.username,
+                    };
+
+                    const resMail = yield call(authService.sendMail, mailPayload);
+                    if (resMail.status === 200) {
+                        yield put({ type: 'sendMailSuccess', payload: res.body });
+                    }
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'loginFail' });
@@ -159,26 +163,6 @@ export default {
         *logout(action, { call, put }) {
             yield put({ type: 'logoutSuccess' });
             router.push('/login');
-        },
-
-        *getListCompanies(action, { call, put }) {
-            try {
-                const res = yield call(masterService.getAllCompany, action.payload);
-                yield put({ type: 'getListCompaniesSuccess', payload: res.body.data });
-            } catch (error) {
-                handleErrorModel(error);
-            }
-        },
-
-        *updateCompany(action, { call, put }) {
-            yield put({ type: 'updateCompanySuccess', payload: action.payload });
-        },
-
-        *hideSelectCompanies(action, { call, put }) {
-            yield put({
-                type: 'hideSelectCompaniesSuccess',
-                payload: action.payload,
-            });
         },
 
         *getMyProfile(action, { call, put }) {
@@ -203,6 +187,28 @@ export default {
                 if (res.status === 200) {
                     yield put({ type: 'updateProfileSuccess', payload: res.body });
                     message.success(res.body.message);
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+        *confirmOTP(action, { call, put }) {
+            yield put({ type: 'loginSuccess' });
+        },
+
+        *resetMail(action, { call, put }) {
+            yield put({ type: 'resetMailSuccess' });
+        },
+
+        *getDetailAccount(action, { call, put }) {
+            try {
+                const res = yield call(accountService.getDetailAccount, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'getDetailAccountSuccess', payload: res.body });
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });

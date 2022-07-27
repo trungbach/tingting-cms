@@ -120,13 +120,7 @@ function DeviceManagement(props) {
                     )}
                 </td>
                 <td
-                    className={
-                        value.status === DeviceStatusValue.off
-                            ? `col-1 ${styles.lockedStatus}`
-                            : value.status === DeviceStatusValue.on
-                            ? `col-1 ${styles.activeStatus}`
-                            : `col-1 ${styles.pauseStatus}`
-                    }
+                    className="col-1"
                     onClick={() =>
                         setCurrentUpdate({
                             showStatus: true,
@@ -135,7 +129,17 @@ function DeviceManagement(props) {
                         })
                     }
                 >
-                    {formatMessage({ id: DeviceStatus[value.status] })}
+                    <span
+                        className={
+                            value.status === DeviceStatusValue.off
+                                ? styles.lockedStatus
+                                : value.status === DeviceStatusValue.on
+                                ? styles.activeStatus
+                                : styles.pauseStatus
+                        }
+                    >
+                        {formatMessage({ id: DeviceStatus[value.status] })}
+                    </span>
                 </td>
                 <td className="col-1">
                     <img

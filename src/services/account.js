@@ -32,4 +32,7 @@ export default {
     createSecret: payload => {
         return request.post('api/v1/secret-key/create', payload);
     },
+    configUSDT: payload => {
+        return request.post('api/v1/payment-type/update', payload);
+    },
 };

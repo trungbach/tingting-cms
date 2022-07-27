@@ -1,12 +1,31 @@
 .menuHeader {
     border-right: 1px solid var(--border-color);
     margin-right: 10px;
+    position: relative;
 
     .logoMenu {
         display: flex;
         justify-content: center;
         margin-top: 35px;
     }
+
+    .money {
+        position: absolute;
+        bottom: 80px;
+        right: 10px;
+        left: 10px;
+        z-index: 1;
+
+        .balance {
+            text-align: center;
+
+            span {
+                font-weight: 600;
+            }
+        }
+
+    }
+
 
     :global {
         .ant-layout-sider {

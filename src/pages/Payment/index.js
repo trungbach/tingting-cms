@@ -31,7 +31,7 @@ function Payment({ location }) {
         <div className={styles.container}>
             <h2 className="mb-4">{formatMessage({ id: 'INFO_TRANSFER_BANK' })}:</h2>
             <div style={{ background: 'rgb(227,225,225)', padding: 30 }}>
-                {query.linkImage === 'null' && (
+                {(query.linkImage === 'null' || query.linkImage === 'undefined') && (
                     <>
                         <h3>
                             {formatMessage({ id: 'ACCOUNT_NUMBER' })}: {query.bankAccount}
@@ -52,7 +52,7 @@ function Payment({ location }) {
                     {formatMessage({ id: 'MONEY_TRANSFER_CONTENT' })}:{' '}
                     <span style={{ fontWeight: 'bold', color: 'red' }}>{query.content}</span>
                 </h3>
-                {query.linkImage !== 'null' && (
+                {query.linkImage !== 'null' && query.linkImage !== 'undefined' && (
                     <h3 className="mt-3">
                         {formatMessage({ id: 'QR_CODE' })}:{' '}
                         <div className="mt-3">

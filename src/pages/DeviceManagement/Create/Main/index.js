@@ -50,6 +50,13 @@ function CreateCard(props) {
         dispatch({ type: 'DEVICE/createCard', payload: values });
     };
 
+    const key = 'sortNameBank';
+    const arrayUniqueByBankName = [
+        ...new Map(
+            paymentTypes.filter(i => i.sortNameBank !== 'USDT').map(item => [item[key], item]),
+        ).values(),
+    ];
+
     return (
         <div className={styles.content}>
             <PageTitle
@@ -96,7 +103,7 @@ function CreateCard(props) {
                         name="paymentTypeId"
                     >
                         <Select style={{ minWidth: 180 }} defaultValue="">
-                            {paymentTypes.map((item, index) => {
+                            {arrayUniqueByBankName.map((item, index) => {
                                 return (
                                     <Option value={item.id}>
                                         {formatMessage({ id: `${item.fullNameBank}` })}
@@ -104,6 +111,15 @@ function CreateCard(props) {
                                 );
                             })}
                         </Select>
+                    </Form.Item>
+
+                    <Form.Item
+                        label={`${formatMessage({ id: 'CURRENT_BALANCE' })} (₫)`}
+                        rules={[{ required: true }]}
+                        name="totalMoney"
+                        whitespace
+                    >
+                        <Input className={styles.textInput} />
                     </Form.Item>
 
                     <Form.Item label={formatMessage({ id: 'QR_CODE' })} name="qrImage">

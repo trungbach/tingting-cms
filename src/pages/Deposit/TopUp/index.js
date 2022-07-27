@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import React, { useEffect } from 'react';
 import { formatMessage } from 'umi-plugin-react/locale';
 import styles from './styles.scss';
+import { PaymentTypeValue } from '@/config/constant';
 const { Option } = Select;
 const formItemLayout = {
     labelCol: {
@@ -59,11 +60,14 @@ function TopUp({ dispatch, depositStore }) {
                             rules={[{ required: true }]}
                         >
                             <Select style={{ minWidth: 180 }}>
-                                {arrayUniqueByBankName
-                                    .filter(i => i.sortNameBank)
-                                    .map((item, index) => {
-                                        return <Option value={item.id}>{item.sortNameBank}</Option>;
-                                    })}
+                                {listPaymentType.map((item, index) => {
+                                    return (
+                                        <Option value={item.id}>
+                                            {item.sortNameBank} -{' '}
+                                            {formatMessage({ id: PaymentTypeValue[item.type] })}
+                                        </Option>
+                                    );
+                                })}
                             </Select>
                         </Form.Item>
                         <Form.Item

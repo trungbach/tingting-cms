@@ -2,6 +2,7 @@ import { message } from 'antd';
 import { handleErrorModel } from '@/util/function';
 import depositService from '@/services/deposit';
 import accountService from '@/services/account';
+import { formatMessage } from 'umi-plugin-react/locale';
 export default {
     namespace: 'ADMIN',
     state: {
@@ -21,6 +22,12 @@ export default {
             return {
                 ...state,
                 loading: false,
+            };
+        },
+
+        success(state, action) {
+            return {
+                ...state,
             };
         },
 
@@ -60,6 +67,22 @@ export default {
                 const res = yield call(accountService.getAccounts, action.payload);
                 if (res.status === 200) {
                     yield put({ type: 'getMerchantSuccess', payload: res.body });
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+
+        *configUSDT(action, { call, put }) {
+            try {
+                const res = yield call(accountService.configUSDT, action.payload);
+                if (res.status === 200) {
+                    message.success(formatMessage({ id: 'SUCCESS' }));
+                    yield put({ type: 'success' });
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });

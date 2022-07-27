@@ -6,6 +6,8 @@ import ListWithdraw from '../ListWithdraw';
 import Settlement from '../Settlement';
 import AddWithdraw from '../AddWithdraw';
 import styles from './styles.scss';
+import { useLocalStorage } from '@/hooks/index';
+import { ADMIN_KEY, Role } from '@/config/constant';
 
 function Withdraw(props) {
     const { location } = props;
@@ -20,36 +22,44 @@ function Withdraw(props) {
         }
     };
 
+    const [admin] = useLocalStorage(ADMIN_KEY);
+
     return (
         <>
-            <div className={styles.tabs}>
-                <button
-                    className={
-                        location.query.tab === 'list-withdraw' || location.query.tab === undefined
-                            ? `${styles.active}`
-                            : undefined
-                    }
-                    onClick={() => router.push('/home/withdraw?tab=list-withdraw')}
-                >
-                    {formatMessage({ id: 'WITHDRAW_LIST' })}
-                </button>
-                <button
-                    className={
-                        location.query.tab === 'add-withdraw' ? `${styles.active}` : undefined
-                    }
-                    onClick={() => router.push('/home/withdraw?tab=add-withdraw')}
-                >
-                    {formatMessage({ id: 'ADD_WITHDRAW_REQUEST' })}
-                </button>
-
-                {/* <button
+            {admin?.role === Role.ROLE_USER && (
+                <div className={styles.tabs}>
+                    <button
+                        className={
+                            location.query.tab === 'list-withdraw' ||
+                            location.query.tab === undefined
+                                ? `${styles.active}`
+                                : undefined
+                        }
+                        onClick={() => router.push('/home/withdraw?tab=list-withdraw')}
+                    >
+                        {formatMessage({ id: 'WITHDRAW_LIST' })}
+                    </button>
+                    {admin?.role === Role.ROLE_USER && (
+                        <button
+                            className={
+                                location.query.tab === 'add-withdraw'
+                                    ? `${styles.active}`
+                                    : undefined
+                            }
+                            onClick={() => router.push('/home/withdraw?tab=add-withdraw')}
+                        >
+                            {formatMessage({ id: 'ADD_WITHDRAW_REQUEST' })}
+                        </button>
+                    )}
+                    {/* <button
                     className={location.query.tab === 'settlement' ? `${styles.active}` : undefined}
                     onClick={() => router.push('/home/withdraw?tab=settlement')}
                 >
                     {formatMessage({ id: 'SETTLEMENT_APPLICATION' })}
                 </button> */}
-            </div>
-            <div className={styles.content}>{renderComponent()}</div>
+                </div>
+            )}
+            {renderComponent()}
         </>
     );
 }

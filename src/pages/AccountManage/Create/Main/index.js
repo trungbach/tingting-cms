@@ -121,9 +121,9 @@ function CreateAccount(props) {
 
                     {role === Role.ROLE_USER && (
                         <Form.Item
-                            label={formatMessage({ id: 'MERCHANT' })}
-                            name="agentId"
-                            rules={[{ required: true }]}
+                            label={formatMessage({ id: 'AGENT' })}
+                            name="parentId"
+                            // rules={[{ required: true }]}
                         >
                             <Select style={{ minWidth: 180 }}>
                                 {accounts.map(item => {

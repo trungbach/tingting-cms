@@ -17,6 +17,9 @@ import { withRouter } from 'umi';
 import { formatMessage } from 'umi-plugin-react/locale';
 import styles from './styles.scss';
 import TableData from './TableData';
+import { useLocalStorage } from '@/hooks';
+import { ADMIN_KEY } from '@/config/constant';
+
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
@@ -31,6 +34,8 @@ function ListDeposit(props) {
     const [orderCode, setOrderCode] = useState();
 
     const [pageIndex, setPageIndex] = useState(1);
+
+    const [admin] = useLocalStorage(ADMIN_KEY);
 
     useEffect(() => {
         const payload = {
@@ -51,7 +56,17 @@ function ListDeposit(props) {
             startDate: rangeTime?.[0],
             endDate: rangeTime?.[1],
         };
+        if (admin?.role === Role.ROLE_AGENT) {
+            payload.agentId = admin.id;
+        }
         dispatch({ type: 'DEPOSIT/getDeposits', payload });
+        const interval = setInterval(
+            () => dispatch({ type: 'DEPOSIT/getDeposits', payload }),
+            5000,
+        );
+        return () => {
+            clearInterval(interval);
+        };
     }, [
         pageIndex,
         userId,
@@ -62,6 +77,7 @@ function ListDeposit(props) {
         updateResponse,
         rangeTime,
         dispatch,
+        admin,
     ]);
 
     function disabledDate(current) {
@@ -71,11 +87,9 @@ function ListDeposit(props) {
 
     const getQueryString = queries => {
         return Object.keys(queries)
+            .filter(i => queries[i] !== undefined)
             .reduce((result, key) => {
-                return [
-                    ...result,
-                    `${encodeURIComponent(key)}=${encodeURIComponent(queries[key])}`,
-                ];
+                return [...result, `${encodeURIComponent(key)}=${queries[key]}`];
             }, [])
             .join('&');
     };
@@ -85,9 +99,14 @@ function ListDeposit(props) {
             message.warn(formatMessage({ id: 'PLEASE_SET_TIME_EXPORT' }));
             return;
         }
-        const url = 'api/admin/v1/transaction/export';
+        const url = 'api/v1/transaction/export';
         var params = getQueryString({
-            // companyId: companyId,
+            page: pageIndex - 1,
+            transactionType: 'send_money',
+            transactionStatus,
+            userId,
+            paymentType,
+            orderCode,
             startDate: rangeTime[0],
             endDate: rangeTime[1],
         });
@@ -95,7 +114,7 @@ function ListDeposit(props) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/xlsx',
-                Authorization: 'Bearer ' + cookies.get(TOKEN_KEY),
+                Authorization: 'Bearer ' + localStorage.getItem(TOKEN_KEY),
             },
         })
             .then(response => response.blob())

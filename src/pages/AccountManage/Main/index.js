@@ -50,10 +50,6 @@ function AccountManage(props) {
     );
 
     useEffect(() => {
-        console.log('listSecret', listSecret);
-    }, [listSecret]);
-
-    useEffect(() => {
         let payload = {
             page: pageIndex - 1,
             phone: name,

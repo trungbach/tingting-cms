@@ -15,24 +15,37 @@ import { Link, withRouter } from 'umi';
 import { formatMessage } from 'umi-plugin-react/locale';
 import { Role } from '../../config/constant';
 import styles from './styles.scss';
+import { formatVnd } from '@/util/function';
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 function PageHeader(props) {
-    const { location, masterDataStore } = props;
+    const { location, masterDataStore, dispatch } = props;
+    const { detailAccount } = masterDataStore;
     const [collapsed, setCollapsed] = useState(false);
     const [page, setPage] = useState(location.pathname);
 
     const [admin] = useLocalStorage(ADMIN_KEY);
-    const { companies } = masterDataStore;
+
+    const cronGetAccount = () => {
+        if (admin) {
+            const payload = {
+                userId: admin.id,
+            };
+            dispatch({ type: 'MASTERDATA/getDetailAccount', payload });
+        }
+    };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            cronGetAccount();
+        }, 5000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, [dispatch]);
 
     let listMenu = [
-        {
-            page: 'transaction',
-            icon: <img src={ic_transaction} />,
-            url: '/home/transaction',
-            text: formatMessage({ id: 'DASHBOARD' }),
-        },
         {
             page: 'deposit',
             icon: <img src={ic_deposit} />,
@@ -47,6 +60,8 @@ function PageHeader(props) {
         },
     ];
     console.log('admin', admin);
+    console.log('detailAccount', detailAccount);
+
     if (admin?.role === Role.ROLE_ADMIN) {
         const adminMenu = [
             {
@@ -104,6 +119,27 @@ function PageHeader(props) {
 
     return (
         <div className={styles.menuHeader}>
+            <div className={styles.money}>
+                {(admin?.role === Role.ROLE_USER || admin?.role === Role.ROLE_AGENT) && (
+                    <div className={styles.balance}>
+                        <span>{formatMessage({ id: 'BALANCE' })}: </span>
+                        <span>{detailAccount && formatVnd(detailAccount?.currentMoney)}</span>
+                    </div>
+                )}
+                {admin?.role === Role.ROLE_AGENT && detailAccount.userMoneyConfig && (
+                    <div className={styles.balance}>
+                        <div>
+                            <span>{formatMessage({ id: 'DEPOSIT_COMMISSION' })}:</span>
+                            <span>{detailAccount.userMoneyConfig.agentPayFeeBank}%</span>
+                        </div>
+                        <div>
+                            <span>{formatMessage({ id: 'WITHDRAW_COMMISSION' })}:</span>
+                            <span>{detailAccount.userMoneyConfig.agentWithdrawFeeBank}%</span>
+                        </div>
+                    </div>
+                )}
+            </div>
+
             <Sider
                 width={250}
                 collapsedWidth={100}

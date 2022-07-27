@@ -69,7 +69,7 @@ export default {
 
     effects: {
         *getDeposits(action, { call, put }) {
-            yield put({ type: 'loading' });
+            // yield put({ type: 'loading' });
             try {
                 const res = yield call(depositService.getDeposits, action.payload);
                 if (res.status === 200) {

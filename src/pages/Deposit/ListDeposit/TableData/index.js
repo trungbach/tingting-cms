@@ -13,7 +13,7 @@ import ModalLoading from '@/components/ModalLoading';
 const { confirm } = Modal;
 
 function TableData({ dispatch, depositStore, pageIndex, setPageIndex }) {
-    const { listDeposit, totalRow, loading } = depositStore;
+    const { listDeposit, totalRow, loading, listMerchant } = depositStore;
     console.log('listDeposit', listDeposit);
     const [admin] = useLocalStorage(ADMIN_KEY);
     const handleDelete = id => {
@@ -34,7 +34,7 @@ function TableData({ dispatch, depositStore, pageIndex, setPageIndex }) {
                 <td className="col-1">{item.code}</td>
                 <td className="col-2">{item.orderCode}</td>
                 <td className="col-2">
-                    <span>{item.paymentType}</span>
+                    <span>{listMerchant.find(i => i.id === item.ownerId)?.phone}</span>
                     {' - '}
                     {formatMessage({ id: PaymentTypeValue[item.paymentType] })}
                 </td>

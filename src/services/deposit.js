@@ -52,4 +52,11 @@ export default {
     createCardBank: payload => {
         return request.post('api/v1/card-bank/create', payload);
     },
+
+    denyTransaction: payload => {
+        return request.post('api/v1/transaction/staff-delete-money', payload);
+    },
+    approveTransaction: payload => {
+        return request.post('api/v1/transaction/staff-confirm-money', payload);
+    },
 };

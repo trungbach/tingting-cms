@@ -11,7 +11,7 @@ function AdminAuthentication(props) {
         localStorage.getItem(ADMIN_KEY) &&
         (pathname === '/' || pathname === '/login')
     ) {
-        history.replace('/home/transaction');
+        history.replace('/home/deposit');
         return '';
     }
 

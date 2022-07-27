@@ -1,15 +1,45 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './styles.scss';
 import { formatMessage } from 'umi-plugin-react/locale';
 import Cleave from 'cleave.js/react';
+import { connect } from 'dva';
+import { message } from 'antd';
 
-export default function USDTPaymentRate() {
+function USDTPaymentRate({ adminStore, dispatch }) {
+    const { listPaymentType } = adminStore;
     const [amountDeposit, setAmountDeposit] = React.useState();
+    const [currentExchange, setCurrentExchange] = React.useState();
 
-    const handleSubmit = values => {};
+    useEffect(() => {
+        dispatch({ type: 'ADMIN/getPaymentType' });
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (listPaymentType.length > 0) {
+            const usdt = listPaymentType.find(i => i.sortNameBank === 'USDT');
+            if (!usdt) {
+                message.error(formatMessage({ id: 'DONT_HAVE_USDT' }));
+                return;
+            } else {
+                setCurrentExchange(usdt.exchangeRate * 1000);
+            }
+        }
+    }, [listPaymentType]);
+
+    const handleSubmit = () => {
+        if (!listPaymentType.find(i => i.sortNameBank === 'USDT')) {
+            message.error(formatMessage({ id: 'DONT_HAVE_USDT' }));
+            return;
+        }
+        const payload = {
+            id: listPaymentType.find(i => i.sortNameBank === 'USDT').id,
+            exchangeRate: amountDeposit / 1000,
+        };
+        dispatch({ type: 'ADMIN/configUSDT', payload });
+    };
 
     const handleChange = e => {
-        setAmountDeposit(e.currentTarget.rawValue);
+        setAmountDeposit(Number(e.currentTarget.rawValue));
     };
 
     return (
@@ -24,6 +54,7 @@ export default function USDTPaymentRate() {
                             className={styles.textInput}
                             placeholder={formatMessage({ id: 'AMOUNT_IN_VND' })}
                             onChange={handleChange}
+                            value={currentExchange}
                             options={{
                                 numeral: true,
                                 numeralThousandsGroupStyle: 'thousand',
@@ -42,3 +73,6 @@ export default function USDTPaymentRate() {
         </div>
     );
 }
+export default connect(({ ADMIN }) => ({
+    adminStore: ADMIN,
+}))(USDTPaymentRate);

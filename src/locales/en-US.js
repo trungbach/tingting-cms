@@ -75,6 +75,7 @@ export default {
     NEW_RECIPIENT: 'New recipient',
     CONTENT: 'Content',
     DEVICE_KEY: 'Device key',
+    AGENT: 'Agent',
 
     // PROFILE
     PROFILE: 'Profile',
@@ -155,6 +156,9 @@ export default {
     ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_TRANSACTION:
         'Are you sure you want to delete this transaction?',
 
+    ARE_YOU_SURE_YOU_WANT_TO_DENY_THIS_TRANSACTION:
+        'Are you sure you want to deny this transaction?',
+
     // IP ADDRESS
     IP_ADDRESS_MANAGEMENT: 'IP Address Managenent',
     IP_ADDRESS_LIMIT: 'IP Address Limit',
@@ -162,6 +166,11 @@ export default {
     INPUT_IP_ADDRESS: 'Input IP address...',
     IP_ADDRESS: 'IP Address',
     ID: 'ID',
+    APPROVE_WITHRAW_REQUEST: 'Approve withdraw request',
+    SELECT_PAYMENT_ACCOUNT: 'Select payment account',
+    PROCESSING: 'Processing',
+    CONFIRM_OTP_FROM_EMAIL: 'Confirm OTP from email',
+    WRONG_OTP: 'Wrong OTP!',
 
     // MONEY CONFIG
     WITHDRAWAL_FEE_FOR_AGENT: 'Withdrawal fee for agent',
@@ -170,6 +179,8 @@ export default {
     DEPOSIT_FEE_FOR_SYSTEM: 'Deposit fee for system',
     DEPOSIT_COMMISSION_PERCENTAGE: 'Deposit commission percentage',
     WITHDRAW_COMMISSION_PERCENTAGE: 'Withdraw commission percentage',
+    WITHDRAW_COMMISSION: 'Withdraw commission',
+    DEPOSIT_COMMISSION: 'Deposit commission',
     CONFIG_PERCENT_COMMISSION_DEPOSIT_WITHDRAW: 'Config percent commistion deposit, withdraw',
     CUMULATIVE_TODAY: 'Cumulative today',
     ALL_CUMULATIVE: 'All cumulative',
@@ -179,6 +190,8 @@ export default {
     IN_PROGRESS_USER: 'Approved',
     IN_PROGRESS_STAFF: 'Waiting',
     FAIL: 'Fail',
+    DONT_HAVE_USDT: 'Dont have USDT wallet address yet',
+    CURRENT_BALANCE: 'Current balance',
 
     // payment
     INFO_TRANSFER_BANK: 'Bank transfer information',

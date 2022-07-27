@@ -33,7 +33,18 @@
         tbody {
             tr {
                 display: flex;
-                font-size: 14px;
+
+                &>td {
+                    font-size: 12px !important;
+                    padding-left: 0 !important;
+                    padding-right: 0 !important;
+
+                    &>div {
+                        font-size: 12px !important;
+
+                    }
+                }
+
                 padding: 15px 0;
                 align-items: center;
                 margin: 0;

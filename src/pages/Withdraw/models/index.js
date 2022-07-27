@@ -17,6 +17,8 @@ export default {
         listCardBank: [],
         listPaymentType: [],
         addCardResponse: undefined,
+        denyResponse: undefined,
+        approveResponse: undefined,
     },
     reducers: {
         loading(state, action) {
@@ -83,11 +85,27 @@ export default {
                 addCardResponse: action.payload.body,
             };
         },
+
+        denyTransactionSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                denyResponse: action.payload,
+            };
+        },
+
+        approveTransactionSuccess(state, action) {
+            return {
+                ...state,
+                loading: false,
+                approveResponse: action.payload,
+            };
+        },
     },
 
     effects: {
         *getWithdraws(action, { call, put }) {
-            yield put({ type: 'loading' });
+            // yield put({ type: 'loading' });
             try {
                 const res = yield call(depositService.getDeposits, action.payload);
                 if (res.status === 200) {
@@ -204,6 +222,40 @@ export default {
                 const res = yield call(depositService.getPaymentType, action.payload);
                 if (res.status === 200) {
                     yield put({ type: 'getPaymentTypeSuccess', payload: res.body });
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+
+        *denyTransaction(action, { call, put }) {
+            yield put({ type: 'loading' });
+            try {
+                const res = yield call(depositService.denyTransaction, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'denyTransactionSuccess', payload: res.body });
+                    message.success(formatMessage({ id: 'SUCCESS' }));
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+
+        *approveTransaction(action, { call, put }) {
+            yield put({ type: 'loading' });
+            try {
+                const res = yield call(depositService.approveTransaction, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'approveTransactionSuccess', payload: res.body });
+                    message.success(formatMessage({ id: 'SUCCESS' }));
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });

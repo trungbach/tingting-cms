@@ -1,11 +1,9 @@
-import { message, Modal } from 'antd';
-import Cleave from 'cleave.js/react';
+import { PaymentTypeValue } from '@/config/constant';
+import { Modal } from 'antd';
 import { connect } from 'dva';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { formatMessage } from 'umi-plugin-react/locale';
 import styles from './styles.scss';
-import ModalLoading from '@/components/ModalLoading';
-import { PaymentTypeValue } from '@/config/constant';
 function ModalSecret({ dispatch, showSecret, setShowSecret, listSecret }) {
     const handleClose = () => {
         setShowSecret(false);
@@ -17,7 +15,7 @@ function ModalSecret({ dispatch, showSecret, setShowSecret, listSecret }) {
             visible={showSecret}
             wrapClassName={styles.modal}
             onOk={handleClose}
-            okText={formatMessage({ id: 'SUBMIT' })}
+            okText={formatMessage({ id: 'OK' })}
             onCancel={handleClose}
             destroyOnClose
         >
