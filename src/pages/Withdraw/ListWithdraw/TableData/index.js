@@ -129,7 +129,16 @@ function TableData({ dispatch, withdrawStore, pageIndex, setPageIndex }) {
                             {moment(item.createdAt).format(DATE_FORMAT_TRANSACTION)}
                         </td>
                         <td className="col-2">
-                            {moment(item.updatedAt).format(DATE_FORMAT_TRANSACTION)}
+                            {item.staffApproveId ? (
+                                <>
+                                    <span>{item.staffName}</span> -
+                                    <span>
+                                        {moment(item.updatedAt).format(DATE_FORMAT_TRANSACTION)}
+                                    </span>
+                                </>
+                            ) : (
+                                '---'
+                            )}
                         </td>
                         {admin?.role === Role.ROLE_ADMIN && (
                             <td className="col-1 d-flex justify-content-center">

@@ -29,10 +29,14 @@ function TableData({ dispatch, depositStore, pageIndex, setPageIndex }) {
     const renderData = listDeposit.map((item, index) => {
         return (
             <tr className="text-center" key={index}>
-                <td className="col-1">{item.ownerId}</td>
-                <td className="col-1">{item.orderUsername}</td>
+                {/* <td className="col-1">{item.ownerId}</td>
+                <td className="col-1">{item.orderUsername}</td> */}
                 <td className="col-1">{item.code}</td>
+
                 <td className="col-2">{item.orderCode}</td>
+                <td className="col-2">
+                    {item.bankName} - {item.bankAccount}
+                </td>
                 <td className="col-2">
                     <span>{listMerchant.find(i => i.id === item.ownerId)?.phone}</span>
                     {' - '}
@@ -70,10 +74,11 @@ function TableData({ dispatch, depositStore, pageIndex, setPageIndex }) {
             <table>
                 <thead>
                     <tr className="text-center">
-                        <th className="col-1">{formatMessage({ id: 'MERCHANT_USER_ID' })}</th>
-                        <th className="col-1">{formatMessage({ id: 'USERNAME' })}</th>
+                        {/* <th className="col-1">{formatMessage({ id: 'MERCHANT_USER_ID' })}</th>
+                        <th className="col-1">{formatMessage({ id: 'USERNAME' })}</th> */}
                         <th className="col-1">{formatMessage({ id: 'ORDER_ID' })}</th>
-                        <th className="col-2">{formatMessage({ id: 'MERCHANT_ORDER_ID' })}</th>
+                        <th className="col-2">{formatMessage({ id: 'USER_ORDER' })}</th>
+                        <th className="col-2">{formatMessage({ id: 'RECIPIENT_ACC' })}</th>
                         <th className="col-2">{formatMessage({ id: 'MERCHANT_CHANNEL' })}</th>
                         <th className={admin?.role === Role.ROLE_ADMIN ? 'col-1' : 'col-2'}>
                             {formatMessage({ id: 'AMOUNT' })}

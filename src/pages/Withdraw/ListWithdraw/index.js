@@ -32,17 +32,26 @@ function ListWithdraw(props) {
         updateResponse,
         denyResponse,
         approveResponse,
+        devices,
     } = withdrawStore;
     const [rangeTime, setRangeTime] = useState([]);
     const [transactionStatus, setTransactionStatus] = useState();
     const [paymentType, setPaymentType] = useState();
     const [userId, setUserId] = useState();
     const [username, setUsername] = useState();
+    const [deviceId, setDeviceId] = useState();
     const [orderCode, setOrderCode] = useState();
 
     const [pageIndex, setPageIndex] = useState(1);
 
     const [admin] = useLocalStorage(ADMIN_KEY);
+
+    useEffect(() => {
+        const payload = {
+            page: 0,
+        };
+        dispatch({ type: 'WITHDRAW/getDevices', payload });
+    }, [dispatch]);
 
     useEffect(() => {
         const payload = {
@@ -62,6 +71,7 @@ function ListWithdraw(props) {
             orderCode,
             startDate: rangeTime?.[0],
             endDate: rangeTime?.[1],
+            deviceId,
         };
         if (admin?.role === Role.ROLE_AGENT) {
             payload.agentId = admin.id;
@@ -89,6 +99,7 @@ function ListWithdraw(props) {
         approveResponse,
         admin,
         userId,
+        deviceId,
     ]);
 
     function disabledDate(current) {
@@ -178,7 +189,7 @@ function ListWithdraw(props) {
                     </Select>
                 </div>
 
-                <div className={styles.select}>
+                {/* <div className={styles.select}>
                     <div className="mb-1">{formatMessage({ id: 'CHANNEL' })}:</div>
                     <Select
                         style={{ minWidth: 180 }}
@@ -190,7 +201,7 @@ function ListWithdraw(props) {
                             return <Option value={item}>{formatMessage({ id: `${item}` })}</Option>;
                         })}
                     </Select>
-                </div>
+                </div> */}
 
                 <div className={styles.select}>
                     <div className="mb-1">{formatMessage({ id: 'STATUS' })}:</div>
@@ -212,6 +223,20 @@ function ListWithdraw(props) {
                         onChange={e => setUsername(e.target.value)}
                     />
                 </div> */}
+
+                <div className={styles.select}>
+                    <div className="mb-1">{formatMessage({ id: 'DEVICE' })}:</div>
+                    <Select
+                        style={{ minWidth: 180 }}
+                        defaultValue=""
+                        onChange={value => setDeviceId(value)}
+                    >
+                        <Option value={''}>{formatMessage({ id: 'ALL' })}</Option>
+                        {devices.map(item => {
+                            return <Option value={item.id}>{item.bankName}</Option>;
+                        })}
+                    </Select>
+                </div>
 
                 <div className={styles.select}>
                     <div className="mb-1">{formatMessage({ id: 'MERCHANT_ORDER_ID' })}</div>

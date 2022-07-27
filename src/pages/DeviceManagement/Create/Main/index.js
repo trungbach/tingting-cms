@@ -137,7 +137,11 @@ function CreateCard(props) {
                         <Input className={styles.textInput} />
                     </Form.Item>
 
-                    <Form.Item label={formatMessage({ id: 'QR_CODE' })} name="qrImage">
+                    <Form.Item
+                        rules={[{ required: true }]}
+                        label={formatMessage({ id: 'QR_CODE' })}
+                        name="qrImage"
+                    >
                         {avatar && (
                             <img
                                 style={{

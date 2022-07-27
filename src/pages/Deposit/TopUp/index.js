@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import React, { useEffect } from 'react';
 import { formatMessage } from 'umi-plugin-react/locale';
 import styles from './styles.scss';
-import { PaymentTypeValue } from '@/config/constant';
+import { PaymentType } from '@/config/constant';
 const { Option } = Select;
 const formItemLayout = {
     labelCol: {
@@ -65,13 +65,13 @@ function TopUp({ dispatch, depositStore }) {
                     >
                         <Form.Item
                             label={formatMessage({ id: 'ACCOUNT_RECEIPT' })}
-                            name="bankId"
+                            name="mobileId"
                             rules={[{ required: true }]}
                         >
                             <Select style={{ minWidth: 180 }}>
                                 {devices.map((item, index) => {
                                     return (
-                                        <Option value={item.paymentTypeId}>
+                                        <Option value={item.id}>
                                             {item.bankName} - {item.numberAccount}
                                         </Option>
                                     );
@@ -93,6 +93,39 @@ function TopUp({ dispatch, depositStore }) {
                                 }}
                             />
                         </Form.Item>
+
+                        <Form.Item
+                            label={formatMessage({ id: 'PAYMENT_TYPE' })}
+                            name="paymentType"
+                            rules={[{ required: true }]}
+                        >
+                            <Select style={{ minWidth: 180 }}>
+                                {Object.keys(PaymentType).map((item, index) => {
+                                    if (item === 'coin') {
+                                        return null;
+                                    }
+                                    return (
+                                        <Option value={index}>
+                                            {formatMessage({ id: `${item}` })}
+                                        </Option>
+                                    );
+                                })}
+                            </Select>
+                        </Form.Item>
+
+                        {/* <div className={styles.select}>
+                    <div className="mb-1">{formatMessage({ id: 'CHANNEL' })}:</div>
+                    <Select
+                        style={{ minWidth: 180 }}
+                        defaultValue=""
+                        onChange={value => setPaymentType(value)}
+                    >
+                        <Option value="">{formatMessage({ id: 'ALL' })}</Option>
+                        {Object.keys(PaymentType).map((item, index) => {
+                            return <Option value={item}>{formatMessage({ id: `${item}` })}</Option>;
+                        })}
+                    </Select>
+                </div> */}
 
                         <div className="p-3 col-6 d-flex justify-content-end">
                             <button htmlType="submit" className={styles.primaryBtn}>

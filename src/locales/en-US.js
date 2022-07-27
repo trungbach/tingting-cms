@@ -1,4 +1,5 @@
 export default {
+    DEVICE: 'Device',
     // Authen
     LET_GET_STARTED: "Let's Get Started",
     PASSWORD: 'Password',
@@ -43,6 +44,7 @@ export default {
     SUCCESS: 'Success',
     DEPOSIT_FEE: 'Deposit fee',
     WITHDRAW_FEE: 'Withdraw fee',
+    USER_ORDER: 'User Order',
 
     // FILTER
     ALL: 'All',

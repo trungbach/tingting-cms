@@ -25,11 +25,11 @@ const { RangePicker } = DatePicker;
 
 function ListDeposit(props) {
     const { depositStore, dispatch } = props;
-    const { listMerchant, deleteResponse, updateResponse } = depositStore;
+    const { listMerchant, deleteResponse, updateResponse, devices } = depositStore;
     const [rangeTime, setRangeTime] = useState([]);
     const [transactionStatus, setTransactionStatus] = useState();
     const [paymentType, setPaymentType] = useState();
-    const [customer, setCustomer] = useState();
+    const [deviceId, setDeviceId] = useState();
     const [userId, setUserId] = useState();
     const [orderCode, setOrderCode] = useState();
 
@@ -40,10 +40,20 @@ function ListDeposit(props) {
     useEffect(() => {
         const payload = {
             page: 0,
+        };
+        dispatch({ type: 'DEPOSIT/getDevices', payload });
+    }, [dispatch]);
+
+    useEffect(() => {
+        const payload = {
+            page: 0,
             role: RoleName[Role.ROLE_USER],
         };
+        if (admin?.role === Role.ROLE_AGENT) {
+            payload.agentId = admin.id;
+        }
         dispatch({ type: 'DEPOSIT/getMerchants', payload });
-    }, [dispatch]);
+    }, [admin, dispatch]);
 
     useEffect(() => {
         let payload = {
@@ -55,6 +65,7 @@ function ListDeposit(props) {
             orderCode,
             startDate: rangeTime?.[0],
             endDate: rangeTime?.[1],
+            deviceId,
         };
         if (admin?.role === Role.ROLE_AGENT) {
             payload.agentId = admin.id;
@@ -78,6 +89,7 @@ function ListDeposit(props) {
         rangeTime,
         dispatch,
         admin,
+        deviceId,
     ]);
 
     function disabledDate(current) {
@@ -157,7 +169,7 @@ function ListDeposit(props) {
                     <Select
                         style={{ minWidth: 180 }}
                         defaultValue=""
-                        onChange={value => setCustomer(value)}
+                        onChange={value => setUserId(value)}
                     >
                         <Option value={''}>{formatMessage({ id: 'ALL' })}</Option>
                         {listMerchant.map(item => {
@@ -194,8 +206,17 @@ function ListDeposit(props) {
                     </Select>
                 </div>
                 <div className={styles.select}>
-                    <div className="mb-1">{formatMessage({ id: 'MERCHANT_USER_ID' })}:</div>
-                    <Input className={styles.textInput} onChange={e => setUserId(e.target.value)} />
+                    <div className="mb-1">{formatMessage({ id: 'BANK_NAME' })}:</div>
+                    <Select
+                        style={{ minWidth: 180 }}
+                        defaultValue=""
+                        onChange={value => setDeviceId(value)}
+                    >
+                        <Option value={''}>{formatMessage({ id: 'ALL' })}</Option>
+                        {devices.map(item => {
+                            return <Option value={item.id}>{item.bankName}</Option>;
+                        })}
+                    </Select>
                 </div>
 
                 <div className={styles.select}>

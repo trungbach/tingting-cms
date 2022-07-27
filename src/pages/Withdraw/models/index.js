@@ -11,7 +11,7 @@ export default {
         loading: false,
         listWithdraw: [],
         totalRow: 0,
-        listDevices: [],
+        devices: [],
         listMerchant: [],
         deleteResponse: undefined,
         listCardBank: [],
@@ -46,7 +46,7 @@ export default {
         getDevicesSuccess(state, action) {
             return {
                 ...state,
-                listDevices: action.payload.body,
+                devices: action.payload.body,
             };
         },
         getMerchantSuccess(state, action) {

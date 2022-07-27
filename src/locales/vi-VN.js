@@ -1,4 +1,6 @@
 export default {
+    DEVICE: 'Thiết bị chuyển tiền',
+
     // Authen
     LET_GET_STARTED: 'Bắt đầu',
     PASSWORD: 'Mật khẩu',
@@ -48,6 +50,7 @@ export default {
     WITHDRAW: 'Rút',
     DEPOSIT_FEE: 'Phí nạp',
     WITHDRAW_FEE: 'Phí rút',
+    USER_ORDER: 'Nguời nạp',
 
     //  WITHDRAW
     TOPUP: 'Yêu cầu nạp',
