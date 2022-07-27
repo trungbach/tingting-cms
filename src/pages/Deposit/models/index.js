@@ -149,7 +149,7 @@ export default {
                 if (res.status === 200) {
                     yield put({ type: 'success', payload: res.body });
                     window.open(
-                        `http://localhost:8000/payment?bankName=${res.body.body.bankName}&bankAccount=${res.body.body.bankAccount}&bankUsername=${res.body.body.bankUsername}&amount=${action.payload.totalMoney}&linkImage=${res.body.body.linkImage}&content=${res.body.body.content}`,
+                        `http://103.7.40.142::8000/payment?bankName=${res.body.body.bankName}&bankAccount=${res.body.body.bankAccount}&bankUsername=${res.body.body.bankUsername}&amount=${action.payload.totalMoney}&linkImage=${res.body.body.linkImage}&content=${res.body.body.content}`,
                     );
                 } else {
                     message.error(res.body.message);
