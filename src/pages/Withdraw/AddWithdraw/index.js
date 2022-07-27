@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styles from './styles.scss';
-import { Form, Input, Select } from 'antd';
+import { Form, Input, Select, message } from 'antd';
 import { formatMessage } from 'umi-plugin-react/locale';
 import Cleave from 'cleave.js/react';
 import AddRecipient from './AddRecipient';
@@ -19,6 +19,10 @@ function AddWithdraw({ dispatch, withdrawStore }) {
     }, [dispatch, addCardResponse]);
 
     const handleSubmit = values => {
+        if (amountDeposit <= 0) {
+            message.error(formatMessage({ id: 'REQUIRE_VALUE' }));
+            return;
+        }
         const payload = {
             ...values,
             totalMoney: amountDeposit,

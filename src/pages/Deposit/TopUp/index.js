@@ -1,4 +1,4 @@
-import { Form, Select } from 'antd';
+import { Form, Select, message } from 'antd';
 import Cleave from 'cleave.js/react';
 import { connect } from 'dva';
 import React, { useEffect } from 'react';
@@ -17,15 +17,24 @@ const formItemLayout = {
     },
 };
 function TopUp({ dispatch, depositStore }) {
-    const { listPaymentType } = depositStore;
+    const { listPaymentType, devices } = depositStore;
     const [form] = Form.useForm();
     const [amount, setAmount] = React.useState();
 
+    console.log('devices', devices);
+
     useEffect(() => {
-        dispatch({ type: 'DEPOSIT/getPaymentType' });
+        const payload = {
+            page: 0,
+        };
+        dispatch({ type: 'DEPOSIT/getDevices', payload });
     }, [dispatch]);
 
     const handleSubmit = values => {
+        if (amount <= 0) {
+            message.error(formatMessage({ id: 'REQUIRE_VALUE' }));
+            return;
+        }
         values.totalMoney = amount;
         const payload = { ...values };
         dispatch({ type: 'DEPOSIT/createDeposit', payload });
@@ -60,11 +69,10 @@ function TopUp({ dispatch, depositStore }) {
                             rules={[{ required: true }]}
                         >
                             <Select style={{ minWidth: 180 }}>
-                                {listPaymentType.map((item, index) => {
+                                {devices.map((item, index) => {
                                     return (
-                                        <Option value={item.id}>
-                                            {item.sortNameBank} -{' '}
-                                            {formatMessage({ id: PaymentTypeValue[item.type] })}
+                                        <Option value={item.paymentTypeId}>
+                                            {item.bankName} - {item.numberAccount}
                                         </Option>
                                     );
                                 })}

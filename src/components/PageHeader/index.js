@@ -138,6 +138,26 @@ function PageHeader(props) {
                         </div>
                     </div>
                 )}
+                {admin?.role === Role.ROLE_USER && detailAccount.userMoneyConfig && (
+                    <div className={styles.balance}>
+                        <div>
+                            <span>{formatMessage({ id: 'DEPOSIT_FEE' })}:</span>
+                            <span>
+                                {detailAccount.userMoneyConfig.agentPayFeeBank +
+                                    detailAccount.userMoneyConfig.systemPayFeeBank}
+                                %
+                            </span>
+                        </div>
+                        <div>
+                            <span>{formatMessage({ id: 'WITHDRAW_FEE' })}:</span>
+                            <span>
+                                {detailAccount.userMoneyConfig.agentWithdrawFeeBank +
+                                    detailAccount.userMoneyConfig.systemWithdrawFeeBank}
+                                %
+                            </span>
+                        </div>
+                    </div>
+                )}
             </div>
 
             <Sider

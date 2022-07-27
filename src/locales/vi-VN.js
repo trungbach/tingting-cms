@@ -46,6 +46,8 @@ export default {
     ALL: 'Tất cả',
     DEPOSIT: 'Nạp',
     WITHDRAW: 'Rút',
+    DEPOSIT_FEE: 'Phí nạp',
+    WITHDRAW_FEE: 'Phí rút',
 
     //  WITHDRAW
     TOPUP: 'Yêu cầu nạp',

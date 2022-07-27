@@ -41,6 +41,8 @@ export default {
     DASHBOARD: 'Dashboard',
     LIST_SECRET_KEY: 'List Secret Key',
     SUCCESS: 'Success',
+    DEPOSIT_FEE: 'Deposit fee',
+    WITHDRAW_FEE: 'Withdraw fee',
 
     // FILTER
     ALL: 'All',

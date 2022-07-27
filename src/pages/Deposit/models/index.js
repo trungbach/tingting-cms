@@ -3,6 +3,7 @@ import { handleErrorModel } from '@/util/function';
 import depositService from '@/services/deposit';
 import accountService from '@/services/account';
 import secretService from '@/services/secret';
+import deviceService from '@/services/device';
 export default {
     namespace: 'DEPOSIT',
     state: {
@@ -13,6 +14,7 @@ export default {
         totalRow: 0,
         listSecret: [],
         deleteResponse: undefined,
+        devices: [],
     },
     reducers: {
         loading(state, action) {
@@ -63,6 +65,12 @@ export default {
                 ...state,
                 loading: false,
                 deleteResponse: action.payload.body,
+            };
+        },
+        getDevicesSuccess(state, action) {
+            return {
+                ...state,
+                devices: action.payload.body,
             };
         },
     },
@@ -162,6 +170,21 @@ export default {
                         type: 'deleteTransactionSuccess',
                         payload: res.body,
                     });
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+
+        *getDevices(action, { call, put }) {
+            try {
+                const res = yield call(deviceService.getDevices, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'getDevicesSuccess', payload: res.body });
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });
