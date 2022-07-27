@@ -273,6 +273,27 @@ const routes = [
         _title_default: 'TingTing',
       },
       {
+        path: '/home/update-manipulation/:deviceId',
+        component: __IS_BROWSER
+          ? _dvaDynamic({
+              app: require('@tmp/dva').getApp(),
+              models: () => [
+                import(/* webpackChunkName: 'p__DeviceManagement__models__index.js' */ '/Users/macair/TrungBach/TingTingPayCMS/src/pages/DeviceManagement/models/index.js').then(
+                  m => {
+                    return { namespace: 'index', ...m.default };
+                  },
+                ),
+              ],
+              component: () =>
+                import(/* webpackChunkName: "p__DeviceManagement__Edit" */ '../DeviceManagement/Edit'),
+            })
+          : require('../DeviceManagement/Edit').default,
+        Routes: [require('../../components/AdminAuthentication').default],
+        exact: true,
+        _title: 'TingTing',
+        _title_default: 'TingTing',
+      },
+      {
         path: '/home/ip-address',
         component: __IS_BROWSER
           ? _dvaDynamic({

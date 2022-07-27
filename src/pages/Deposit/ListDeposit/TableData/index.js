@@ -39,7 +39,9 @@ function TableData({ dispatch, depositStore, pageIndex, setPageIndex }) {
                     {formatMessage({ id: PaymentTypeValue[item.paymentType] })}
                 </td>
                 <td className={admin?.role === Role.ROLE_ADMIN ? 'col-1' : 'col-2'}>
-                    {formatVnd(item.totalMoney)}
+                    {item.totalCurrentMoney > 0
+                        ? formatVnd(item.totalCurrentMoney)
+                        : formatVnd(item.totalMoney)}
                 </td>
                 <td className="col-1">
                     {formatMessage({ id: TransactionStatusValue[item.transactionStatus] })}

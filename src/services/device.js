@@ -20,4 +20,12 @@ export default {
     deleteDevice: payload => {
         return request.post('api/v1/mobile-device/delete', payload);
     },
+
+    getDetailDevice: payload => {
+        return request.get('api/v1/mobile-device/get-detail', payload);
+    },
+
+    updateMetadata: payload => {
+        return request.post('api/v1/mobile-device/update', payload);
+    },
 };

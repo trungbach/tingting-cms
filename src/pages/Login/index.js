@@ -58,7 +58,6 @@ function Login({ dispatch, masterDataStore }) {
                 <div className={styles.form}>
                     <div className={styles.formTitle}>
                         <h3>{formatMessage({ id: 'LET_GET_STARTED' })}</h3>
-                        <p>{formatMessage({ id: 'SIGN_IN_TO_CONTINUE_TO_SPECIE' })}</p>
                     </div>
                     <Form scrollToFirstError layout="vertical" onFinish={onSubmit} form={form}>
                         <Form.Item

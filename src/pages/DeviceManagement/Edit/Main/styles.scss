@@ -1,9 +1,16 @@
 @import "@/base.scss";
 
 .content {
-  overflow-y: auto;
-  .form {
-    width: 70%;
-    margin-bottom: 50px;
-  }
+    overflow-y: auto;
+
+    .textInput {
+        width: 70%;
+    }
+
+    .submit {
+        width: 70%;
+        margin-top: 1rem;
+        display: flex;
+        justify-content: flex-end;
+    }
 }

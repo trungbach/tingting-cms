@@ -40,7 +40,7 @@ function CreateCard(props) {
         values.status = 1;
         values.dailyWithdrawMoney = 1000000;
         values.oneTimesWithdrawMoney = 100000;
-        values.totalMoney = 100000;
+        values.totalMoney = Number(values.totalMoney);
 
         const bank = paymentTypes.find(item => item.id === values.paymentTypeId);
         if (bank) {
@@ -115,7 +115,12 @@ function CreateCard(props) {
 
                     <Form.Item
                         label={`${formatMessage({ id: 'CURRENT_BALANCE' })} (₫)`}
-                        rules={[{ required: true }]}
+                        rules={[
+                            { required: true },
+                            {
+                                pattern: new RegExp(/\d+/g), // only number
+                            },
+                        ]}
                         name="totalMoney"
                         whitespace
                     >

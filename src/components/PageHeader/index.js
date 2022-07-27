@@ -80,7 +80,7 @@ function PageHeader(props) {
                 page: 'ip',
                 icon: <img src={ic_business} />,
                 url: '/home/ip-address',
-                text: formatMessage({ id: 'IP_ADDRESS_LIMIT' }),
+                text: formatMessage({ id: 'IP_ADDRESS_MANAGEMENT' }),
             },
         ];
         listMenu = [...listMenu, ...adminMenu];

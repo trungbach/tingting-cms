@@ -78,6 +78,12 @@ export default {
                 },
 
                 {
+                    path: '/home/update-manipulation/:deviceId',
+                    component: '../pages/DeviceManagement/Edit',
+                    Routes: ['./src/components/AdminAuthentication'],
+                },
+
+                {
                     path: '/home/ip-address',
                     component: '../pages/IPAddress',
                     Routes: ['./src/components/AdminAuthentication'],

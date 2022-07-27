@@ -1,7 +1,6 @@
 export default {
     // Authen
     LET_GET_STARTED: "Let's Get Started",
-    SIGN_IN_TO_CONTINUE_TO_SPECIE: 'Sign in to continue to Specie',
     PASSWORD: 'Password',
     CHANGE_PASSWORD_SUCCESSED: 'Change Password Successed',
     REMEMBER_ME: 'Remember Me',
@@ -31,7 +30,7 @@ export default {
     TIME: 'Time',
     AMOUNT: 'Amount',
     STATUS: 'Status',
-    MERCHANT_USER_ID: 'User Id',
+    MERCHANT_USER_ID: 'Merchant Id',
     MERCHANT: 'Merchant',
     BALANCE: 'Balance',
     ACTION: 'Action',
@@ -50,7 +49,6 @@ export default {
 
     //  WITHDRAW
     TOPUP: 'Top-up',
-    WITHDRAW_SUMMARY: 'Withdraw Summary',
     WITHDRAW_LIST: 'Withdraw List',
     SETTLEMENT_APPLICATION: 'Settlement Application',
     ADD_SETTLEMENT: 'Add Settlement',
@@ -161,7 +159,6 @@ export default {
 
     // IP ADDRESS
     IP_ADDRESS_MANAGEMENT: 'IP Address Managenent',
-    IP_ADDRESS_LIMIT: 'IP Address Limit',
     ADD_IP_ADDRESS: 'Add IP Address',
     INPUT_IP_ADDRESS: 'Input IP address...',
     IP_ADDRESS: 'IP Address',
@@ -192,6 +189,7 @@ export default {
     FAIL: 'Fail',
     DONT_HAVE_USDT: 'Dont have USDT wallet address yet',
     CURRENT_BALANCE: 'Current balance',
+    UPDATE_DEVICE_MANIPULATION: 'Update device manipulation',
 
     // payment
     INFO_TRANSFER_BANK: 'Bank transfer information',

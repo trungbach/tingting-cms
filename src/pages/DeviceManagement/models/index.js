@@ -14,6 +14,7 @@ export default {
         updateSuccess: undefined,
         deleteSuccess: undefined,
         listPaymentType: [],
+        detailDevice: {},
     },
     reducers: {
         getDevicesSuccess(state, action) {
@@ -72,6 +73,12 @@ export default {
             return {
                 ...state,
                 listPaymentType: action.payload.body,
+            };
+        },
+        getDetailDeviceSuccess(state, action) {
+            return {
+                ...state,
+                detailDevice: action.payload.body,
             };
         },
     },
@@ -141,11 +148,11 @@ export default {
             }
         },
 
-        *getPaymentType(action, { call, put }) {
+        *getDetailDevice(action, { call, put }) {
             try {
-                const res = yield call(deviceService.getPaymentType, action.payload);
+                const res = yield call(deviceService.getDetailDevice, action.payload);
                 if (res.status === 200) {
-                    yield put({ type: 'getPaymentTypesSuccess', payload: res.body });
+                    yield put({ type: 'getDetailDeviceSuccess', payload: res.body });
                 } else {
                     message.error(res.body.message);
                     yield put({ type: 'error' });
@@ -161,6 +168,25 @@ export default {
                 const res = yield call(deviceService.createCard, action.payload);
                 if (res.status === 200) {
                     yield put({ type: 'success', payload: res.body });
+                    message.success(res.body.message);
+                    router.push('/home/device-management');
+                } else {
+                    message.error(res.body.message);
+                    yield put({ type: 'error' });
+                }
+            } catch (error) {
+                handleErrorModel(error);
+                yield put({ type: 'error' });
+            }
+        },
+
+        *updateMetadata(action, { call, put }) {
+            yield put({ type: 'loading' });
+
+            try {
+                const res = yield call(deviceService.updateMetadata, action.payload);
+                if (res.status === 200) {
+                    yield put({ type: 'success' });
                     message.success(res.body.message);
                     router.push('/home/device-management');
                 } else {

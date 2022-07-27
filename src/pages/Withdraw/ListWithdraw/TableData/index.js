@@ -76,7 +76,9 @@ function TableData({ dispatch, withdrawStore, pageIndex, setPageIndex }) {
                             <span>{item.bankAccount}</span>
                         </td>
                         <td className={admin?.role === Role.ROLE_ADMIN ? 'col-1' : 'col-2'}>
-                            {formatVnd(item.totalMoney)}
+                            {item.totalCurrentMoney > 0
+                                ? formatVnd(item.totalCurrentMoney)
+                                : formatVnd(item.totalMoney)}
                         </td>
                         <td className="col-1">
                             {item.transactionStatus === TransactionStatus.IN_PROGRESS_STAFF ? (

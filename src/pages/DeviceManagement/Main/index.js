@@ -77,8 +77,8 @@ function DeviceManagement(props) {
         });
     };
 
-    const goToEdit = id => {
-        router.push(`/home/update-device/${id}`);
+    const goToEdit = deviceId => {
+        router.push(`/home/update-manipulation/${deviceId}`);
     };
 
     const renderDataUsers = loading ? (
