@@ -30,7 +30,7 @@ function CreateCard(props) {
     }, [dispatch]);
 
     useEffect(() => {
-        avatar && form.setFieldsValue({ qrId: avatar.id });
+        avatar && form.setFieldsValue({ qrImage: avatar.id });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [avatar]);
 
