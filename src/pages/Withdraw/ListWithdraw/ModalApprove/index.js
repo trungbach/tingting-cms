@@ -18,7 +18,7 @@ function compare(a, b) {
 }
 
 function ModalApprove({ dispatch, currentTrans, setCurrentTrans, withdrawStore }) {
-    const { listDevices } = withdrawStore;
+    const { devices } = withdrawStore;
 
     const [maxBalanceDevice, setMaxBalanceDevice] = useState();
 
@@ -31,11 +31,11 @@ function ModalApprove({ dispatch, currentTrans, setCurrentTrans, withdrawStore }
     }, [dispatch]);
 
     useEffect(() => {
-        if (listDevices.length) {
-            const maxBalanceDevice = listDevices.sort(compare)[0];
+        if (devices.length) {
+            const maxBalanceDevice = devices.sort(compare)[0];
             maxBalanceDevice && setMaxBalanceDevice(maxBalanceDevice.id);
         }
-    }, [listDevices]);
+    }, [devices]);
 
     const handleClose = () => {
         setCurrentTrans({
@@ -53,7 +53,7 @@ function ModalApprove({ dispatch, currentTrans, setCurrentTrans, withdrawStore }
         handleClose();
     };
 
-    if (!listDevices.length || !maxBalanceDevice) {
+    if (!devices.length || !maxBalanceDevice) {
         return <ModalLoading />;
     }
 
@@ -74,7 +74,7 @@ function ModalApprove({ dispatch, currentTrans, setCurrentTrans, withdrawStore }
                     defaultValue={maxBalanceDevice}
                     onChange={value => setMaxBalanceDevice(value)}
                 >
-                    {listDevices.map((item, index) => {
+                    {devices.map((item, index) => {
                         return (
                             <Select.Option key={index} value={item.id}>
                                 <span>{item.bankName}</span>
